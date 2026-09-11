@@ -2,14 +2,14 @@
 
 
 ## Команда разработки
-| **Temirlan Kulsarinov** (Team Lead) | Backend / Инфраструктура и API | [@your-username](https://github.com/) |
+| **Temirlan Kulsarinov** (Team Lead) | Backend / Инфраструктура и API | [@TemirlanKulsarinov] |
 
-| **Daurenbekov Dinmukhammad** | Frontend / Верстка и стили | [@dinmukhammad-username](https://github.com/) |
+| **Daurenbekov Dinmukhammad** | Frontend / Верстка и стили | [@daurenbekovd30-boop] |
 
-| **Ashimov Ratmir** | Frontend / Логика приложения | [@ratmirahimo](https://github.com/) |
+| **Ashimov Ratmir** | Frontend / Логика приложения | [@Wahaiblya] |
 
 
 ## 🛠 Технологии
-* **Frontend:** HTML5, CSS3, JavaScript (или React / Vue)
-* **Backend:** Node.js / Express (или другой бэкенд)
+* **Frontend:** HTML5, CSS3, JavaScript (React)
+* **Backend:** Node.js
 * **Инструменты:** VS Code, Git, GitHub
