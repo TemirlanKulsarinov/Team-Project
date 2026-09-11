@@ -2,7 +2,7 @@
 
 
 ## Команда разработки
-| **Temirlan Kulsarinov** (Team Lead) | Backend / Инфраструктура и API | [@TemirlanKulsarinov] |
+| **Temirlan Kulsarinov** (Team Lead) | Backend / Инфраструктура | [@TemirlanKulsarinov] |
 
 | **Daurenbekov Dinmukhammad** | Frontend / Верстка и стили | [@daurenbekovd30-boop] |
 
