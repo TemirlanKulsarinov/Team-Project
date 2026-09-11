@@ -3,7 +3,9 @@
 
 ## Команда разработки
 | **Temirlan Kulsarinov** (Team Lead) | Backend / Инфраструктура и API | [@your-username](https://github.com/) |
+
 | **Daurenbekov Dinmukhammad** | Frontend / Верстка и стили | [@dinmukhammad-username](https://github.com/) |
+
 | **Ashimov Ratmir** | Frontend / Логика приложения | [@ratmirahimo](https://github.com/) |
 
 
