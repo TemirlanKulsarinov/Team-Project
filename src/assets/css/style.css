@@ -89,3 +89,53 @@
     gap: 16px;
   }
 }
+
+/* Стили для навигационных вкладок */
+.team-nav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  background-color: #ffffff;
+  color: #1f2937;
+  border: 2px solid #e5e7eb;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+
+.nav-btn:hover {
+  border-color: #10b981;
+  color: #10b981;
+}
+
+/* Активная кнопка вкладки */
+.nav-btn.active {
+  background-color: #10b981;
+  color: #ffffff;
+  border-color: #10b981;
+}
+
+/* Логика показа/скрытия резюме: по умолчанию все скрыты */
+.resume-section {
+  display: none;
+}
+
+/* Класс, который делает активное резюме видимым */
+.resume-section.active-tab {
+  display: block;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

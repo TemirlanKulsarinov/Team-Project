@@ -25,7 +25,7 @@
             text-align: center;
             padding: 50px 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 50px;
+            margin-bottom: 30px;
         }
 
         .team-header h1 {
@@ -43,7 +43,6 @@
         .team-container {
             display: flex;
             flex-direction: column;
-            gap: 60px;
             padding: 0 20px 80px;
             max-width: 1100px;
             margin: 0 auto;
@@ -52,6 +51,29 @@
         .sheet {
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .header-main {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .profile-photo {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--rule);
+            background-color: var(--chip);
+        }
+
+        @media (max-width: 720px){
+            .header-main {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
         }
     </style>
 </head>
@@ -64,7 +86,14 @@
 
     <main class="team-container">
         
-        <section id="aituar">
+        <div class="team-nav">
+            <button class="nav-btn active" onclick="switchTab('aituar', this)">Айтуар</button>
+            <button class="nav-btn" onclick="switchTab('dinmukhammad', this)">Динмухаммад</button>
+            <button class="nav-btn" onclick="switchTab('temirlan', this)">Темирлан</button>
+            <button class="nav-btn" onclick="switchTab('aldiyar', this)">Алдияр</button>
+        </div>
+
+        <section id="aituar" class="resume-section active-tab">
           <div class="sheet">
             <header>
               <div class="header-main">
@@ -146,7 +175,7 @@
           </div>
         </section>
 
-        <section id="dinmukhammad">
+        <section id="dinmukhammad" class="resume-section">
           <div class="sheet">
             <header>
               <div class="header-main">
@@ -206,7 +235,7 @@
           </div>
         </section>
 
-        <section id="temirlan">
+        <section id="temirlan" class="resume-section">
           <div class="sheet">
             <header>
               <div class="header-main">
@@ -247,7 +276,7 @@
           </div>
         </section>
 
-        <section id="aldiyar">
+        <section id="aldiyar" class="resume-section">
           <div class="sheet">
             <header>
               <div class="header-main">
@@ -330,5 +359,7 @@
 
     </main>
 
+    <!-- Подключение внешнего JS файла -->
+    <script src="js/script.js"></script>
 </body>
 </html>
