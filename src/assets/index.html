@@ -86,280 +86,296 @@
 
     <main class="team-container">
         
-        <div class="team-nav">
-            <button class="nav-btn active" onclick="switchTab('aituar', this)">Айтуар</button>
-            <button class="nav-btn" onclick="switchTab('dinmukhammad', this)">Динмухаммад</button>
-            <button class="nav-btn" onclick="switchTab('temirlan', this)">Темирлан</button>
-            <button class="nav-btn" onclick="switchTab('aldiyar', this)">Алдияр</button>
+        <!-- Главный экран (приветствие) -->
+        <div id="welcomeScreen" class="welcome-screen">
+            <h2>Добро пожаловать на сайт нашей команды!</h2>
+            <p>Здесь вы можете ознакомиться с информацией и навыками каждого участника проекта.</p>
+            <button class="main-btn" onclick="showResumeSection()">Резюме работников</button>
         </div>
 
-        <section id="aituar" class="resume-section active-tab">
-          <div class="sheet">
-            <header>
-              <div class="header-main">
-                <img src="assets/aituar.jpg" alt="Фото Айтуара" class="profile-photo">
-                <div>
-                  <h1>Байбурин Айтуар Айдарович</h1>
-                  <p class="role">Начинающий веб-дизайнер</p>
-                </div>
-              </div>
-              <div class="contacts">
-                Астана, Казахстан<br>
-                <a href="tel:+77756377342">+7 775 637 7342</a><br>
-                <a href="mailto:aktpnr22@gmail.com">aktpnr22@gmail.com</a><br>
-                26 июля 2007 · 19 лет
-              </div>
-            </header>
-
-            <div class="grid">
-              <div class="resume-main">
-                <section>
-                  <h2>О себе</h2>
-                  <p class="summary">Студент 3 курса Astana International University. Хочу развиваться в веб-дизайне: проектировать сайты и обложки, в которых есть креатив, а не шаблон. Учусь доводить идею от наброска до готового макета и вёрстки, открыт к стажировке и первым коммерческим проектам.</p>
-                </section>
-
-                <section>
-                  <h2>Образование</h2>
-                  <div class="job">
-                    <div class="job-head">
-                      <h3>Astana International University</h3>
-                      <span class="dates">2024 — настоящее время</span>
-                    </div>
-                    <p class="company">3 курс, бакалавриат · Астана</p>
-                    <ul>
-                      <li>Учебные проекты по дизайну интерфейсов и вёрстке сайтов.</li>
-                      <li>Работа с типографикой, композицией и цветом в макетах.</li>
-                    </ul>
-                  </div>
-                </section>
-
-                <section>
-                  <h2>Проекты</h2>
-                  <div class="job">
-                    <div class="job-head">
-                      <h3>Название проекта</h3>
-                      <span class="dates">2026</span>
-                    </div>
-                    <p class="company">Личный проект</p>
-                    <ul>
-                      <li>Что делали: макет сайта, обложка, редизайн страницы.</li>
-                      <li>В чём была идея и как вы её реализовали.</li>
-                      <li>Ссылка на макет или готовую страницу.</li>
-                    </ul>
-                  </div>
-                </section>
-              </div>
-
-              <aside>
-                <div class="block">
-                  <h2>Навыки</h2>
-                  <ul class="chips">
-                    <li>Веб-дизайн</li>
-                    <li>Figma</li>
-                    <li>HTML</li>
-                    <li>CSS</li>
-                    <li>Типографика</li>
-                    <li>Дизайн обложек</li>
-                  </ul>
-                </div>
-                <div class="block">
-                  <h2>Языки</h2>
-                  <ul class="stack">
-                    <li><span class="label">Казахский</span>родной</li>
-                    <li><span class="label">Русский</span>свободно</li>
-                    <li><span class="label">Английский</span>уровень</li>
-                  </ul>
-                </div>
-              </aside>
+        <!-- Обертка с резюме (появляется после клика) -->
+        <div id="resumeWrapper" class="resume-content-wrapper">
+            
+            <!-- Меню-вкладки с выбором участников -->
+            <div class="team-nav">
+                <button class="nav-btn active" onclick="switchTab('aituar', this)">Айтуар</button>
+                <button class="nav-btn" onclick="switchTab('dinmukhammad', this)">Динмухаммад</button>
+                <button class="nav-btn" onclick="switchTab('temirlan', this)">Темирлан</button>
+                <button class="nav-btn" onclick="switchTab('aldiyar', this)">Алдияр</button>
             </div>
-          </div>
-        </section>
 
-        <section id="dinmukhammad" class="resume-section">
-          <div class="sheet">
-            <header>
-              <div class="header-main">
-                <img src="assets/dinmukhammad.jpg" alt="Фото Динмухаммада" class="profile-photo">
-                <div>
-                  <h1>Дауренбеков Динмухаммад</h1>
-                  <p class="role">CEO</p>
-                </div>
-              </div>
-              <div class="contacts">
-                Астана, Казахстан<br>
-                <a href="tel:+77088164050">+7 708 816 40 50</a><br>
-                <a href="mailto:daurenbekovd30@gmail.com">daurenbekovd30@gmail.com</a>
-              </div>
-            </header>
-            <div class="grid">
-              <div class="resume-main">
-                <section>
-                  <h2>Опыт работы</h2>
-                  <div class="job">
-                    <div class="job-head">
-                      <h3>Colins</h3>
+            <!-- 1. БЛОК АЙТУАРА -->
+            <section id="aituar" class="resume-section active-tab">
+              <div class="sheet">
+                <header>
+                  <div class="header-main">
+                    <img src="assets/aituar.jpg" alt="Фото Айтуара" class="profile-photo">
+                    <div>
+                      <h1>Байбурин Айтуар Айдарович</h1>
+                      <p class="role">Начинающий веб-дизайнер</p>
                     </div>
-                    <p class="company">Опыт работы в компании</p>
                   </div>
-                  <div class="job">
-                    <div class="job-head">
-                      <h3>Mnata</h3>
-                    </div>
-                    <p class="company">Опыт работы в компании</p>
+                  <div class="contacts">
+                    Астана, Казахстан<br>
+                    <a href="tel:+77756377342">+7 775 637 7342</a><br>
+                    <a href="mailto:aktpnr22@gmail.com">aktpnr22@gmail.com</a><br>
+                    26 июля 2007 · 19 лет
                   </div>
-                </section>
-              </div>
-              <aside>
-                <div class="block">
-                  <h2>Навыки</h2>
-                  <ul class="chips">
-                    <li>Дисциплинированность</li>
-                    <li>Образованность</li>
-                    <li>Лидерство</li>
-                    <li>Коммуникабельность</li>
-                    <li>Ответственность</li>
-                    <li>Стратегия</li>
-                  </ul>
-                </div>
-                <div class="block">
-                  <h2>Языки</h2>
-                  <ul class="stack">
-                    <li><span class="label">Казахский</span>родной</li>
-                    <li><span class="label">Русский</span>родной</li>
-                    <li><span class="label">Английский</span>свободно</li>
-                    <li><span class="label">Турецкий</span>базовый</li>
-                  </ul>
-                </div>
-              </aside>
-            </div>
-          </div>
-        </section>
+                </header>
 
-        <section id="temirlan" class="resume-section">
-          <div class="sheet">
-            <header>
-              <div class="header-main">
-                <img src="assets/temirlan.jpg" alt="Фото Темирлана" class="profile-photo">
-                <div>
-                  <h1>Темирлан Кулсаринов</h1>
-                  <p class="role">Software Engineer / CS Student</p>
-                </div>
-              </div>
-              <div class="contacts">
-                Астана, Казахстан<br>
-                <a href="https://github.com/твоя_ссылка" target="_blank">GitHub: @твоя_ссылка</a>
-              </div>
-            </header>
-            <div class="grid">
-              <div class="resume-main">
-                <section>
-                  <h2>Обо мне</h2>
-                  <p class="summary">Студент, увлекающийся архитектурой ЭВМ и разработкой программного обеспечения. Имею практический опыт написания логики на Java, а также обработки и визуализации данных на Python (Pandas, Matplotlib). Уверенно работаю в командных проектах, используя Git, GitHub и VS Code.</p>
-                </section>
-              </div>
-              <aside>
-                <div class="block">
-                  <h2>Технический стек</h2>
-                  <ul class="chips">
-                    <li>Python</li>
-                    <li>Pandas</li>
-                    <li>Matplotlib</li>
-                    <li>Java</li>
-                    <li>Git & GitHub</li>
-                    <li>VS Code</li>
-                    <li>HTML / CSS</li>
-                    <li>Архитектура ЭВМ</li>
-                  </ul>
-                </div>
-              </aside>
-            </div>
-          </div>
-        </section>
+                <div class="grid">
+                  <div class="resume-main">
+                    <section>
+                      <h2>О себе</h2>
+                      <p class="summary">Студент 3 курса Astana International University. Хочу развиваться в веб-дизайне: проектировать сайты и обложки, в которых есть креатив, а не шаблон. Учусь доводить идею от наброска до готового макета и вёрстки, открыт к стажировке и первым коммерческим проектам.</p>
+                    </section>
 
-        <section id="aldiyar" class="resume-section">
-          <div class="sheet">
-            <header>
-              <div class="header-main">
-                <img src="assets/aldiyar.jpg" alt="Фото Алдияра" class="profile-photo">
-                <div>
-                  <h1>Азиев Алдияр Даниярович</h1>
-                  <p class="role">Student</p>
+                    <section>
+                      <h2>Образование</h2>
+                      <div class="job">
+                        <div class="job-head">
+                          <h3>Astana International University</h3>
+                          <span class="dates">2024 — настоящее время</span>
+                        </div>
+                        <p class="company">3 курс, бакалавриат · Астана</p>
+                        <ul>
+                          <li>Учебные проекты по дизайну интерфейсов и вёрстке сайтов.</li>
+                          <li>Работа с типографикой, композицией и цветом в макетах.</li>
+                        </ul>
+                      </div>
+                    </section>
+
+                    <section>
+                      <h2>Проекты</h2>
+                      <div class="job">
+                        <div class="job-head">
+                          <h3>Название проекта</h3>
+                          <span class="dates">2026</span>
+                        </div>
+                        <p class="company">Личный проект</p>
+                        <ul>
+                          <li>Что делали: макет сайта, обложка, редизайн страницы.</li>
+                          <li>В чём была идея и как вы её реализовали.</li>
+                          <li>Ссылка на макет или готовую страницу.</li>
+                        </ul>
+                      </div>
+                    </section>
+                  </div>
+
+                  <aside>
+                    <div class="block">
+                      <h2>Навыки</h2>
+                      <ul class="chips">
+                        <li>Веб-дизайн</li>
+                        <li>Figma</li>
+                        <li>HTML</li>
+                        <li>CSS</li>
+                        <li>Типографика</li>
+                        <li>Дизайн обложек</li>
+                      </ul>
+                    </div>
+                    <div class="block">
+                      <h2>Языки</h2>
+                      <ul class="stack">
+                        <li><span class="label">Казахский</span>родной</li>
+                        <li><span class="label">Русский</span>свободно</li>
+                        <li><span class="label">Английский</span>уровень</li>
+                      </ul>
+                    </div>
+                  </aside>
                 </div>
               </div>
-              <div class="contacts">
-                Астана, Казахстан<br>
-                <a href="tel:+77089179090">+7 708 917 9090</a><br>
-                <a href="mailto:example@gmail.com">example@gmail.com</a><br>
-                <a href="https://github.com/" target="_blank">GitHub</a>
-              </div>
-            </header>
-            <div class="grid">
-              <div class="resume-main">
-                <section>
-                  <h2>Обо мне</h2>
-                  <p class="summary">Студент Astana International University, интересующийся современными технологиями, искусственным интеллектом и автоматизацией бизнес-процессов.</p>
-                </section>
-                <section>
-                  <h2>Образование</h2>
-                  <div class="job">
-                    <div class="job-head">
-                      <h3>Astana International University</h3>
+            </section>
+
+            <!-- 2. БЛОК ДИНМУХАММАДА -->
+            <section id="dinmukhammad" class="resume-section">
+              <div class="sheet">
+                <header>
+                  <div class="header-main">
+                    <img src="assets/dinmukhammad.jpg" alt="Фото Динмухаммада" class="profile-photo">
+                    <div>
+                      <h1>Дауренбеков Динмухаммад</h1>
+                      <p class="role">CEO</p>
                     </div>
-                    <p class="company">Бакалавриат · Вычислительная техника и ПО</p>
                   </div>
-                </section>
-                <section>
-                  <h2>Проекты</h2>
-                  <div class="job">
-                    <div class="job-head">
-                      <h3>AI Customer Support Bot</h3>
+                  <div class="contacts">
+                    Астана, Казахстан<br>
+                    <a href="tel:+77088164050">+7 708 816 40 50</a><br>
+                    <a href="mailto:daurenbekovd30@gmail.com">daurenbekovd30@gmail.com</a>
+                  </div>
+                </header>
+                <div class="grid">
+                  <div class="resume-main">
+                    <section>
+                      <h2>Опыт работы</h2>
+                      <div class="job">
+                        <div class="job-head">
+                          <h3>Colins</h3>
+                        </div>
+                        <p class="company">Опыт работы в компании</p>
+                      </div>
+                      <div class="job">
+                        <div class="job-head">
+                          <h3>Mnata</h3>
+                        </div>
+                        <p class="company">Опыт работы в компании</p>
+                      </div>
+                    </section>
+                  </div>
+                  <aside>
+                    <div class="block">
+                      <h2>Навыки</h2>
+                      <ul class="chips">
+                        <li>Дисциплинированность</li>
+                        <li>Образованность</li>
+                        <li>Лидерство</li>
+                        <li>Коммуникабельность</li>
+                        <li>Ответственность</li>
+                        <li>Стратегия</li>
+                      </ul>
                     </div>
-                    <p class="company">n8n • Telegram • AI</p>
-                    <ul>
-                      <li>Создание AI-бота для автоматизации общения с клиентами.</li>
-                      <li>Автоматическая обработка входящих сообщений.</li>
-                    </ul>
-                  </div>
-                  <div class="job">
-                    <div class="job-head">
-                      <h3>Instagram Automation</h3>
+                    <div class="block">
+                      <h2>Языки</h2>
+                      <ul class="stack">
+                        <li><span class="label">Казахский</span>родной</li>
+                        <li><span class="label">Русский</span>родной</li>
+                        <li><span class="label">Английский</span>свободно</li>
+                        <li><span class="label">Турецкий</span>базовый</li>
+                      </ul>
                     </div>
-                    <p class="company">ManyChat • AI</p>
-                    <ul>
-                      <li>Изучение автоматизации общения с клиентами в Instagram.</li>
-                    </ul>
-                  </div>
-                </section>
-              </div>
-              <aside>
-                <div class="block">
-                  <h2>Навыки</h2>
-                  <ul class="chips">
-                    <li>AI Automation</li>
-                    <li>n8n</li>
-                    <li>Telegram Bots</li>
-                    <li>ManyChat</li>
-                    <li>Google Sheets</li>
-                    <li>HTML / CSS</li>
-                    <li>Git / GitHub</li>
-                  </ul>
+                  </aside>
                 </div>
-                <div class="block">
-                  <h2>Языки</h2>
-                  <ul class="stack">
-                    <li><span class="label">Казахский</span>родной</li>
-                    <li><span class="label">Русский</span>свободно</li>
-                    <li><span class="label">Английский</span>B2</li>
-                  </ul>
+              </div>
+            </section>
+
+            <!-- 3. БЛОК ТЕМИРЛАНА -->
+            <section id="temirlan" class="resume-section">
+              <div class="sheet">
+                <header>
+                  <div class="header-main">
+                    <img src="assets/temirlan.jpg" alt="Фото Темирлана" class="profile-photo">
+                    <div>
+                      <h1>Темирлан Кулсаринов</h1>
+                      <p class="role">Software Engineer / CS Student</p>
+                    </div>
+                  </div>
+                  <div class="contacts">
+                    Астана, Казахстан<br>
+                    <a href="https://github.com/твоя_ссылка" target="_blank">GitHub: @твоя_ссылка</a>
+                  </div>
+                </header>
+                <div class="grid">
+                  <div class="resume-main">
+                    <section>
+                      <h2>Обо мне</h2>
+                      <p class="summary">Студент, увлекающийся архитектурой ЭВМ и разработкой программного обеспечения. Имею практический опыт написания логики на Java, а также обработки и визуализации данных на Python (Pandas, Matplotlib). Уверенно работаю в командных проектах, используя Git, GitHub и VS Code.</p>
+                    </section>
+                  </div>
+                  <aside>
+                    <div class="block">
+                      <h2>Технический стек</h2>
+                      <ul class="chips">
+                        <li>Python</li>
+                        <li>Pandas</li>
+                        <li>Matplotlib</li>
+                        <li>Java</li>
+                        <li>Git & GitHub</li>
+                        <li>VS Code</li>
+                        <li>HTML / CSS</li>
+                        <li>Архитектура ЭВМ</li>
+                      </ul>
+                    </div>
+                  </aside>
                 </div>
-              </aside>
-            </div>
-          </div>
-        </section>
+              </div>
+            </section>
+
+            <!-- 4. БЛОК АЛДИЯРА -->
+            <section id="aldiyar" class="resume-section">
+              <div class="sheet">
+                <header>
+                  <div class="header-main">
+                    <img src="assets/aldiyar.jpg" alt="Фото Алдияра" class="profile-photo">
+                    <div>
+                      <h1>Азиев Алдияр Даниярович</h1>
+                      <p class="role">Student</p>
+                    </div>
+                  </div>
+                  <div class="contacts">
+                    Астана, Казахстан<br>
+                    <a href="tel:+77089179090">+7 708 917 9090</a><br>
+                    <a href="mailto:example@gmail.com">example@gmail.com</a><br>
+                    <a href="https://github.com/" target="_blank">GitHub</a>
+                  </div>
+                </header>
+                <div class="grid">
+                  <div class="resume-main">
+                    <section>
+                      <h2>Обо мне</h2>
+                      <p class="summary">Студент Astana International University, интересующийся современными технологиями, искусственным интеллектом и автоматизацией бизнес-процессов.</p>
+                    </section>
+                    <section>
+                      <h2>Образование</h2>
+                      <div class="job">
+                        <div class="job-head">
+                          <h3>Astana International University</h3>
+                        </div>
+                        <p class="company">Бакалавриат · Вычислительная техника и ПО</p>
+                      </div>
+                    </section>
+                    <section>
+                      <h2>Проекты</h2>
+                      <div class="job">
+                        <div class="job-head">
+                          <h3>AI Customer Support Bot</h3>
+                        </div>
+                        <p class="company">n8n • Telegram • AI</p>
+                        <ul>
+                          <li>Создание AI-бота для автоматизации общения с клиентами.</li>
+                          <li>Автоматическая обработка входящих сообщений.</li>
+                        </ul>
+                      </div>
+                      <div class="job">
+                        <div class="job-head">
+                          <h3>Instagram Automation</h3>
+                        </div>
+                        <p class="company">ManyChat • AI</p>
+                        <ul>
+                          <li>Изучение автоматизации общения с клиентами в Instagram.</li>
+                        </ul>
+                      </div>
+                    </section>
+                  </div>
+                  <aside>
+                    <div class="block">
+                      <h2>Навыки</h2>
+                      <ul class="chips">
+                        <li>AI Automation</li>
+                        <li>n8n</li>
+                        <li>Telegram Bots</li>
+                        <li>ManyChat</li>
+                        <li>Google Sheets</li>
+                        <li>HTML / CSS</li>
+                        <li>Git / GitHub</li>
+                      </ul>
+                    </div>
+                    <div class="block">
+                      <h2>Языки</h2>
+                      <ul class="stack">
+                        <li><span class="label">Казахский</span>родной</li>
+                        <li><span class="label">Русский</span>свободно</li>
+                        <li><span class="label">Английский</span>B2</li>
+                      </ul>
+                    </div>
+                  </aside>
+                </div>
+              </div>
+            </section>
+
+        </div>
 
     </main>
 
-    <!-- Подключение внешнего JS файла -->
     <script src="js/script.js"></script>
 </body>
 </html>

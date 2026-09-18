@@ -139,3 +139,47 @@
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* Главный экран-приветствие */
+.welcome-screen {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.welcome-screen h2 {
+  font-size: 2.2rem;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+.welcome-screen p {
+  color: #6b7280;
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+}
+
+.main-btn {
+  background-color: #10b981;
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.main-btn:hover {
+  background-color: #059669;
+}
+
+/* Контейнер с контентом резюме (по умолчанию скрыт, пока не нажмут кнопку) */
+.resume-content-wrapper {
+  display: none;
+}
+
+.resume-content-wrapper.active-section {
+  display: block;
+}
