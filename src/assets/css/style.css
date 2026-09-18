@@ -1,0 +1,67 @@
+/* css/style.css */
+:root {
+  --paper: #FBFAF7;
+  --ink: #1A1F24;
+  --muted: #5E6872;
+  --rule: #DCD8CF;
+  --accent: #1E5C4F;
+  --chip: #EFEDE6;
+}
+
+@media (prefers-color-scheme: dark){
+  :root {
+    --paper: #15181B;
+    --ink: #E8E6E1;
+    --muted: #9AA3AC;
+    --rule: #2C3238;
+    --accent: #6FBFA8;
+    --chip: #20262B;
+  }
+}
+
+.sheet {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 56px 40px 72px;
+}
+
+.sheet * { box-sizing: border-box; }
+.sheet header { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-end; justify-content: space-between; padding-bottom: 20px; border-bottom: 2px solid var(--ink); }
+.sheet h1 { font-family: "Newsreader", Georgia, serif; font-weight: 500; font-size: clamp(2rem, 5.5vw, 2.8rem); line-height: 1.05; letter-spacing: -0.015em; margin: 0 0 6px; }
+.sheet .role { font-size: 1.05rem; color: var(--accent); font-weight: 500; margin: 0; }
+.sheet .contacts { font-size: 0.88rem; color: var(--muted); text-align: right; line-height: 1.7; }
+.sheet .contacts a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--rule); }
+.sheet .contacts a:hover { color: var(--accent); }
+.sheet .grid { display: grid; grid-template-columns: 1fr 240px; gap: 48px; margin-top: 36px; }
+.sheet section + section { margin-top: 32px; }
+.sheet h2 { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 14px; padding-bottom: 6px; border-bottom: 1px solid var(--rule); }
+.sheet .summary { margin: 0; max-width: 64ch; }
+.sheet .job { padding-left: 18px; border-left: 2px solid var(--rule); margin-bottom: 26px; }
+.sheet .job:last-child { margin-bottom: 0; }
+.sheet .job-head { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; justify-content: space-between; }
+.sheet .job h3 { font-family: "Newsreader", Georgia, serif; font-size: 1.2rem; font-weight: 600; margin: 0; }
+.sheet .dates { font-size: 0.85rem; color: var(--muted); white-space: nowrap; }
+.sheet .company { font-size: 0.92rem; color: var(--accent); margin: 2px 0 8px; }
+.sheet .job ul { margin: 0; padding-left: 18px; }
+.sheet .job li { margin-bottom: 5px; max-width: 62ch; }
+.sheet .job li::marker { color: var(--rule); }
+.sheet aside .block { margin-bottom: 28px; }
+.sheet aside h2 { margin-bottom: 10px; }
+.sheet .chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 0; list-style: none; }
+.sheet .chips li { background: var(--chip); padding: 4px 9px; border-radius: 3px; font-size: 0.84rem; }
+.sheet .stack { list-style: none; margin: 0; padding: 0; font-size: 0.9rem; }
+.sheet .stack li { margin-bottom: 10px; }
+.sheet .stack .label { display: block; color: var(--muted); font-size: 0.82rem; }
+
+@media (max-width: 720px){
+  .sheet { padding: 36px 20px 48px; }
+  .sheet .grid { grid-template-columns: 1fr; gap: 32px; }
+  .sheet header { align-items: flex-start; }
+  .sheet .contacts { text-align: left; }
+}
