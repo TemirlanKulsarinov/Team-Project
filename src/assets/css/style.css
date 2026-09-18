@@ -1,4 +1,4 @@
-/* css/style.css */
+
 :root {
   --paper: #FBFAF7;
   --ink: #1A1F24;
@@ -66,7 +66,7 @@
   .sheet .contacts { text-align: left; }
 }
 
-/* Стили для блока с фотографией */
+
 .header-main {
   display: flex;
   align-items: center;
@@ -90,7 +90,7 @@
   }
 }
 
-/* Стили для навигационных вкладок */
+
 .team-nav {
   display: flex;
   justify-content: center;
@@ -117,19 +117,16 @@
   color: #10b981;
 }
 
-/* Активная кнопка вкладки */
 .nav-btn.active {
   background-color: #10b981;
   color: #ffffff;
   border-color: #10b981;
 }
 
-/* Логика показа/скрытия резюме: по умолчанию все скрыты */
 .resume-section {
   display: none;
 }
 
-/* Класс, который делает активное резюме видимым */
 .resume-section.active-tab {
   display: block;
   animation: fadeIn 0.3s ease-in-out;
@@ -140,7 +137,7 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Главный экран-приветствие */
+
 .welcome-screen {
   text-align: center;
   padding: 80px 20px;
@@ -175,7 +172,6 @@
   background-color: #059669;
 }
 
-/* Контейнер с контентом резюме (по умолчанию скрыт, пока не нажмут кнопку) */
 .resume-content-wrapper {
   display: none;
 }
