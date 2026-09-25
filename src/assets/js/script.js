@@ -1,4 +1,3 @@
-
 function showResumeSection() {
     document.getElementById('welcomeScreen').style.display = 'none';
     document.getElementById('resumeWrapper').classList.add('active-section');
