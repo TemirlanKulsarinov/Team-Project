@@ -76,6 +76,41 @@
         gap: 16px;
       }
     }
+
+    /* Стили для кнопок лаб. работ */
+    .lab-btn {
+      background-color: #f9fafb;
+      color: #374151;
+      border: 1px solid #d1d5db;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lab-btn:hover {
+      background-color: #e5e7eb;
+    }
+
+    /* Стили для тестирования классов в Task 2 */
+    .demo-box {
+      padding: 20px;
+      border: 2px dashed #9ca3af;
+      border-radius: 8px;
+      background-color: #f9fafb;
+      color: #374151;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    /* Этот класс мы будем добавлять и удалять через JS */
+    .demo-box.active {
+      background-color: #10b981;
+      color: white;
+      border-color: #10b981;
+      transform: scale(1.05);
+    }
   </style>
 </head>
 
@@ -88,25 +123,29 @@
 
   <main class="team-container">
 
-    <!-- Главный экран (приветствие) -->
+    <!-- Главный экран -->
     <div id="welcomeScreen" class="welcome-screen">
       <h2>Добро пожаловать на сайт нашей команды!</h2>
       <p>Здесь вы можете ознакомиться с информацией и навыками каждого участника проекта.</p>
       <button class="main-btn" onclick="showResumeSection()">Резюме работников</button>
     </div>
 
-    <!-- Обертка с резюме (появляется после клика) -->
     <div id="resumeWrapper" class="resume-content-wrapper">
 
-      <!-- Меню-вкладки с выбором участников -->
+      <!-- Меню-вкладки -->
       <div class="team-nav">
         <button class="nav-btn active" onclick="switchTab('aituar', this)">Айтуар</button>
         <button class="nav-btn" onclick="switchTab('dinmukhammad', this)">Динмухаммад</button>
         <button class="nav-btn" onclick="switchTab('temirlan', this)">Темирлан</button>
         <button class="nav-btn" onclick="switchTab('aldiyar', this)">Алдияр</button>
         <button class="nav-btn" onclick="switchTab('ratmir', this)">Ратмир</button>
-      </div>
 
+        <!-- Вкладки заданий -->
+        <button class="nav-btn" onclick="switchTab('task1', this)" style="border-color: #2563eb; color: #2563eb;">Task
+          1</button>
+        <button class="nav-btn" onclick="switchTab('task2', this)" style="border-color: #8b5cf6; color: #8b5cf6;">Task
+          2</button>
+      </div>
 
       <!-- БЛОК АЙТУАРА -->
       <section id="aituar" class="resume-section active-tab">
@@ -456,8 +495,62 @@
         </div>
       </section>
 
-    </div>
+      <!-- БЛОК TASK 1 -->
+      <section id="task1" class="resume-section">
+        <div class="sheet" style="background: var(--bg-color); padding: 40px; border-radius: 12px; box-shadow: none;">
+          <div
+            style="background: white; padding: 24px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); max-width: 750px; margin: 0 auto; text-align: center;">
+            <h2 style="font-size: 1.3rem; color: #111827; margin-bottom: 20px; border: none; text-align: left;">
+              Управление элементами (Task 1)</h2>
 
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 30px; justify-content: center;">
+              <button class="lab-btn" onclick="addText()">1. Добавить текст</button>
+              <button class="lab-btn" onclick="changeText()">2. Заменить текст</button>
+              <button class="lab-btn" onclick="deleteText()">3. Удалить текст</button>
+              <button class="lab-btn" onclick="createParagraph()">4. Изменяемый абзац</button>
+            </div>
+
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 16px; min-height: 100px;">
+              <div id="paragraphContainer"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- БЛОК TASK 2 -->
+      <section id="task2" class="resume-section">
+        <div class="sheet" style="background: var(--bg-color); padding: 40px; border-radius: 12px; box-shadow: none;">
+          <div
+            style="background: white; padding: 24px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); max-width: 750px; margin: 0 auto; text-align: center;">
+            <h2 style="font-size: 1.3rem; color: #111827; margin-bottom: 20px; border: none; text-align: left;">
+              Управление классами (Task 2)</h2>
+
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px 0;">
+
+              <!-- Элемент для взаимодействия (цель) -->
+              <div id="task2Target" class="demo-box">
+                Тестовый элемент
+              </div>
+
+              <!-- Кнопка вызова логики из JS -->
+              <button class="lab-btn" onclick="toggleClassAndShow()"
+                style="background-color: #8b5cf6; color: white; border-color: #8b5cf6;">
+                Переключить класс 'active'
+              </button>
+
+              <!-- Вывод классов на экран -->
+              <p id="classListOutput"
+                style="color: #4b5563; font-family: monospace; background: #f3f4f6; padding: 10px 20px; border-radius: 6px; border: 1px solid #e5e7eb; margin: 0;">
+                Классы элемента: demo-box
+              </p>
+              <small style="color: #9ca3af;">(Также результат выведен в консоль разработчика F12)</small>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
   </main>
 
   <script src="js/script.js"></script>
