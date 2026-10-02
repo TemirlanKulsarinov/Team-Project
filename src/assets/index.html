@@ -117,6 +117,8 @@
 <body>
 
   <header class="team-header">
+    <!-- Task 4: переключатель темы -->
+    <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">🌙 Тёмная тема</button>
     <h1>Команда разработки</h1>
     <p>Совместный веб-проект | Portfolio 2026</p>
   </header>
@@ -145,6 +147,8 @@
           1</button>
         <button class="nav-btn" onclick="switchTab('task2', this)" style="border-color: #8b5cf6; color: #8b5cf6;">Task
           2</button>
+        <button class="nav-btn" onclick="switchTab('task3', this)" style="border-color: #f59e0b; color: #f59e0b;">Task
+          3</button>
       </div>
 
       <!-- БЛОК АЙТУАРА -->
@@ -546,6 +550,30 @@
               <small style="color: #9ca3af;">(Также результат выведен в консоль разработчика F12)</small>
 
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- БЛОК TASK 3 -->
+      <section id="task3" class="resume-section">
+        <div class="sheet" style="background: var(--bg-color); padding: 40px; border-radius: 12px; box-shadow: none;">
+          <div class="task-card">
+            <h2 style="font-size: 1.3rem; margin-bottom: 20px; border: none; text-align: left;">
+              Генератор таблицы (Task 3)</h2>
+
+            <div class="table-controls">
+              <label>Строки: <input type="number" id="rowsInput" min="1" max="30" value="5"></label>
+              <label>Столбцы: <input type="number" id="colsInput" min="1" max="30" value="5"></label>
+              <button class="lab-btn" onclick="handleGenerateTable()">Создать таблицу</button>
+            </div>
+
+            <div class="table-controls">
+              <label>Цвет: <input type="color" id="paintColor" value="#ef4444"></label>
+              <button class="lab-btn" onclick="handleCountColor()">Посчитать ячейки этого цвета</button>
+            </div>
+
+            <p id="tableResult"></p>
+            <div id="tableContainer"></div>
           </div>
         </div>
       </section>
