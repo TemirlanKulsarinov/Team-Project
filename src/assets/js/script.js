@@ -87,23 +87,20 @@ function createParagraph() {
     container.appendChild(p);
 }
 
-// ==========================================
-// ЛАБОРАТОРНАЯ РАБОТА: TASK 2
-// ==========================================
 
 function toggleClassAndShow() {
     const targetElement = document.getElementById('task2Target');
     const outputParagraph = document.getElementById('classListOutput');
 
-    // 1. Метод toggle добавляет класс 'active', если его нет, и удаляет, если он есть
+   
     targetElement.classList.toggle('active');
 
-    // Получаем список всех классов элемента в виде строки
+    
     const currentClasses = targetElement.className;
 
-    // 2. Выводим список классов в консоль браузера (F12 -> Консоль)
+    
     console.log("Текущие классы элемента:", currentClasses);
 
-    // 3. Выводим список классов в отдельный тег <p> на странице
+    
     outputParagraph.innerText = "Классы элемента: " + currentClasses;
 }
