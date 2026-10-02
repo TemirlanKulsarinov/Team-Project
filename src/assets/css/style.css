@@ -5,17 +5,19 @@
     --rule: #DCD8CF;
     --accent: #1E5C4F;
     --chip: #EFEDE6;
+    --card: #ffffff;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --paper: #15181B;
-        --ink: #E8E6E1;
-        --muted: #9AA3AC;
-        --rule: #2C3238;
-        --accent: #6FBFA8;
-        --chip: #20262B;
-    }
+/* Тёмная тема включается переключателем (атрибут data-theme="dark") */
+:root[data-theme="dark"] {
+    --paper: #15181B;
+    --ink: #E8E6E1;
+    --muted: #9AA3AC;
+    --rule: #2C3238;
+    --accent: #6FBFA8;
+    --chip: #20262B;
+    --bg-color: #0f1215;
+    --card: #1c2126;
 }
 
 .sheet {
@@ -334,4 +336,168 @@
 
 .resume-content-wrapper.active-section {
     display: block;
+}
+
+
+/* ===== Кнопка переключения темы ===== */
+.team-header {
+    position: relative;
+}
+
+.theme-toggle {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.22);
+}
+
+
+/* ===== Task 3: таблица ===== */
+.task-card {
+    background: var(--card);
+    padding: 24px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    max-width: 750px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.table-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.table-controls input[type="number"] {
+    width: 70px;
+    padding: 6px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+}
+
+.table-controls input[type="color"] {
+    width: 40px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+#tableContainer {
+    overflow-x: auto;
+    margin-top: 16px;
+}
+
+#tableContainer table {
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+#tableContainer td {
+    width: 44px;
+    height: 36px;
+    border: 1px solid #9ca3af;
+    background: #fff;
+    cursor: pointer;
+}
+
+#tableResult {
+    font-weight: 600;
+    margin-top: 12px;
+}
+
+
+/* ===== Task 4: тёмная тема для остальных элементов ===== */
+[data-theme="dark"] .nav-btn {
+    background: #1c2126;
+    color: #e5e7eb;
+    border-color: #2c3238;
+}
+
+[data-theme="dark"] .nav-btn.active {
+    background: #10b981;
+    color: #fff;
+    border-color: #10b981;
+}
+
+[data-theme="dark"] .welcome-screen h2 {
+    color: #f3f4f6;
+}
+
+[data-theme="dark"] .welcome-screen p {
+    color: #9ca3af;
+}
+
+[data-theme="dark"] .lab-btn {
+    background: #262c33;
+    color: #e5e7eb;
+    border-color: #3b434c;
+}
+
+[data-theme="dark"] .lab-btn:hover {
+    background: #323a43;
+}
+
+[data-theme="dark"] .demo-box {
+    background: #1c2126;
+    color: #e5e7eb;
+    border-color: #4b5563;
+}
+
+[data-theme="dark"] .demo-box.active {
+    background: #10b981;
+    color: #fff;
+    border-color: #10b981;
+}
+
+[data-theme="dark"] .table-controls input[type="number"] {
+    background: #262c33;
+    color: #e5e7eb;
+    border-color: #3b434c;
+}
+
+[data-theme="dark"] #tableContainer td {
+    background: #1c2126;
+    border-color: #4b5563;
+}
+
+/* Task 1 и 2: у них цвета заданы прямо в HTML/JS, поэтому !important */
+[data-theme="dark"] #task1 .sheet>div,
+[data-theme="dark"] #task2 .sheet>div {
+    background: var(--card) !important;
+}
+
+[data-theme="dark"] #task1 h2,
+[data-theme="dark"] #task2 h2 {
+    color: var(--ink) !important;
+}
+
+[data-theme="dark"] #classListOutput {
+    background: #262c33 !important;
+    color: #d1d5db !important;
+    border-color: #3b434c !important;
+}
+
+[data-theme="dark"] #paragraphContainer p {
+    background: #262c33 !important;
+    border-color: #3b434c !important;
+}
+
+[data-theme="dark"] #bottomLeftText {
+    color: #e5e7eb !important;
 }

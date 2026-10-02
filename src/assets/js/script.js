@@ -87,20 +87,104 @@ function createParagraph() {
     container.appendChild(p);
 }
 
+// ==========================================
+// ЛАБОРАТОРНАЯ РАБОТА: TASK 2
+// ==========================================
 
 function toggleClassAndShow() {
     const targetElement = document.getElementById('task2Target');
     const outputParagraph = document.getElementById('classListOutput');
 
-   
     targetElement.classList.toggle('active');
 
-    
     const currentClasses = targetElement.className;
 
-    
     console.log("Текущие классы элемента:", currentClasses);
 
-    
     outputParagraph.innerText = "Классы элемента: " + currentClasses;
 }
+
+// ==========================================
+// ЛАБОРАТОРНАЯ РАБОТА: TASK 3 (ТАБЛИЦА)
+// ==========================================
+
+function generateTable(rows, cols) {
+    const container = document.getElementById('tableContainer');
+    container.innerHTML = '';
+    document.getElementById('tableResult').innerText = '';
+
+    const table = document.createElement('table');
+
+    for (let i = 0; i < rows; i++) {
+        const tr = document.createElement('tr');
+        for (let j = 0; j < cols; j++) {
+            const td = document.createElement('td');
+            td.addEventListener('click', function () {
+                const color = document.getElementById('paintColor').value;
+                this.style.backgroundColor = color;
+                this.dataset.color = color.toLowerCase();
+            });
+            tr.appendChild(td);
+        }
+        table.appendChild(tr);
+    }
+    container.appendChild(table);
+}
+
+function countCellsByColor(color) {
+    const cells = document.querySelectorAll('#tableContainer td');
+    let count = 0;
+    cells.forEach(td => {
+        if (td.dataset.color === color.toLowerCase()) count++;
+    });
+    return count;
+}
+
+function handleGenerateTable() {
+    const rows = parseInt(document.getElementById('rowsInput').value, 10);
+    const cols = parseInt(document.getElementById('colsInput').value, 10);
+
+    if (!rows || !cols || rows < 1 || cols < 1 || rows > 30 || cols > 30) {
+        alert('Введите число строк и столбцов от 1 до 30');
+        return;
+    }
+    generateTable(rows, cols);
+}
+
+function handleCountColor() {
+    if (!document.querySelector('#tableContainer td')) {
+        alert('Сначала создайте таблицу');
+        return;
+    }
+    const color = document.getElementById('paintColor').value;
+    const n = countCellsByColor(color);
+    document.getElementById('tableResult').innerText = `Ячеек цвета ${color}: ${n}`;
+}
+
+// ==========================================
+// ЛАБОРАТОРНАЯ РАБОТА: TASK 4 (ТЁМНАЯ ТЕМА)
+// ==========================================
+
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const btn = document.getElementById('themeToggle');
+    if (btn) {
+        btn.textContent = theme === 'dark' ? '☀️ Светлая тема' : '🌙 Тёмная тема';
+    }
+    try { localStorage.setItem('theme', theme); } catch (e) {}
+}
+
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+// При загрузке: сохранённая тема, а если её нет, то системная
+(function initTheme() {
+    let saved = null;
+    try { saved = localStorage.getItem('theme'); } catch (e) {}
+    if (!saved) {
+        saved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    applyTheme(saved);
+})();
