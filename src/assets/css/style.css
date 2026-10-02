@@ -365,6 +365,7 @@
 /* ===== Task 3: таблица ===== */
 .task-card {
     background: var(--card);
+    color: var(--ink);
     padding: 24px;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
@@ -419,6 +420,36 @@
 #tableResult {
     font-weight: 600;
     margin-top: 12px;
+}
+
+/* ===== Task 3: счётчик и список цветов ===== */
+.color-stats {
+    max-width: 320px;
+    margin: 10px auto 16px;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0;
+}
+
+.swatch {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1px solid #9ca3af;
+    flex-shrink: 0;
+}
+
+.stat-total {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--rule);
+    font-weight: 600;
 }
 
 
