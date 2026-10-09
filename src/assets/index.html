@@ -325,6 +325,11 @@
             required>
           <label class="input-label">Текст публикации:</label>
           <textarea id="postBodyInput" class="custom-textarea" placeholder="Что нового?" required></textarea>
+          <label class="input-label">Категория:</label>
+          <select id="postCategorySelect" class="custom-select">
+            <option value="книги">#книги</option>
+            <option value="музыка">#музыка</option>
+          </select>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn-secondary" onclick="closeCreateModal()">Отмена</button>
@@ -334,6 +339,7 @@
     </div>
   </div>
 
+  <!-- Подробный просмотр поста (только чтение) -->
   <div id="viewModal" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
@@ -341,15 +347,39 @@
         <button class="modal-close" onclick="closeViewModal()">✕</button>
       </div>
       <div class="modal-body">
-        <label class="input-label">Заголовок:</label>
-        <input type="text" id="viewTitleInput" class="custom-input" maxlength="100" required>
+        <h3 id="viewTitleText" class="detail-title"></h3>
+        <p id="viewBodyText" class="detail-text"></p>
+        <span id="viewCategoryText" class="detail-category"></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" onclick="openEditModal()">Редактировать</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Редактирование и удаление поста -->
+  <div id="editModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Редактирование</h3>
+        <button class="modal-close" onclick="closeEditModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <span id="editAuthorText" class="author-badge">UserId 1</span>
+        <label class="input-label" style="margin-top: 12px;">Заголовок:</label>
+        <input type="text" id="editTitleInput" class="custom-input" maxlength="100" required>
         <label class="input-label">Содержимое поста:</label>
-        <textarea id="viewBodyInput" class="custom-textarea" required></textarea>
+        <textarea id="editBodyInput" class="custom-textarea" required></textarea>
+        <label class="input-label">Категория:</label>
+        <select id="editCategorySelect" class="custom-select">
+          <option value="книги">#книги</option>
+          <option value="музыка">#музыка</option>
+        </select>
       </div>
       <div class="modal-footer" style="justify-content: space-between;">
         <button type="button" id="deletePostBtn" class="btn-danger" onclick="handleDeletePost()">Удалить ветку</button>
         <div style="display: flex; gap: 10px;">
-          <button type="button" class="btn-secondary" onclick="closeViewModal()">Отмена</button>
+          <button type="button" class="btn-secondary" onclick="closeEditModal()">Отмена</button>
           <button type="button" id="saveEditBtn" class="btn-primary" onclick="handleUpdatePost()">Сохранить
             изменения</button>
         </div>

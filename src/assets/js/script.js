@@ -125,8 +125,15 @@ function toggleTheme() {
 // TASK 5: CRUD (Threads) через dummyjson.com
 const API_URL = 'https://dummyjson.com/posts';
 const POSTS_LIMIT = 10;
+const CATEGORIES = ['книги', 'музыка'];
 let currentActivePost = null;
 let localPostCounter = 0;
+
+// У постов dummyjson нет наших категорий, поэтому загруженным постам
+// категория назначается по id (чётный/нечётный), чтобы она не менялась между перезагрузками
+function getDefaultCategory(id) {
+    return CATEGORIES[Number(id) % CATEGORIES.length];
+}
 
 // Единая обёртка над fetch: бросает ошибку, если сервер ответил не 2xx
 async function apiRequest(url, options = {}) {
@@ -212,6 +219,7 @@ async function handleCreatePost(event) {
     const userId = Number(document.getElementById('postUserSelect').value);
     const titleText = document.getElementById('postTitleInput').value.trim();
     const bodyText = document.getElementById('postBodyInput').value.trim();
+    const category = document.getElementById('postCategorySelect').value;
     if (!titleText || !bodyText) return;
 
     const submitBtn = document.getElementById('submitCreateBtn');
@@ -222,14 +230,15 @@ async function handleCreatePost(event) {
         const created = await apiRequest(`${API_URL}/add`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title: titleText, body: bodyText, userId: userId })
+            body: JSON.stringify({ title: titleText, body: bodyText, userId: userId, tags: [category] })
         });
         // dummyjson не сохраняет данные, поэтому такой пост существует только до перезагрузки
         renderThreadPost({
             id: created.id,
             title: created.title ?? titleText,
             body: created.body ?? bodyText,
-            userId: created.userId ?? userId
+            userId: created.userId ?? userId,
+            category: category
         }, true, true);
         updateEmptyState();
         closeCreateModal();
@@ -262,6 +271,7 @@ function renderThreadPost(post, prepend = false, isLocal = false) {
     postCard.dataset.userId = post.userId;
     postCard.dataset.title = post.title || '';
     postCard.dataset.body = post.body;
+    postCard.dataset.category = post.category || getDefaultCategory(post.id);
     postCard.dataset.likes = initialLikes;
     postCard.dataset.reposts = 0;
 
@@ -277,6 +287,7 @@ function renderThreadPost(post, prepend = false, isLocal = false) {
             </div>
             <h3 class="thread-title"></h3>
             <p class="thread-text"></p>
+            <span class="thread-category"></span>
             <div class="thread-actions">
                 <button type="button" class="action-btn like-btn">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
@@ -294,6 +305,7 @@ function renderThreadPost(post, prepend = false, isLocal = false) {
     postCard.querySelector('.thread-author').textContent = `UserId ${post.userId}`;
     postCard.querySelector('.thread-title').textContent = post.title || '';
     postCard.querySelector('.thread-text').textContent = post.body;
+    postCard.querySelector('.thread-category').textContent = `#${postCard.dataset.category}`;
     postCard.querySelector('.like-count').textContent = initialLikes;
 
     postCard.querySelector('.like-btn').addEventListener('click', (e) => toggleLike(e, postCard));
@@ -335,18 +347,38 @@ function toggleRepost(e, card) {
     card.querySelector('.repost-count').innerText = reposts;
 }
 
+// Подробный просмотр поста (только чтение)
 function openViewModal(card) {
     currentActivePost = card;
     document.getElementById('viewAuthorText').innerText = `UserId ${card.dataset.userId}`;
-    document.getElementById('viewTitleInput').value = card.dataset.title;
-    document.getElementById('viewBodyInput').value = card.dataset.body;
+    document.getElementById('viewTitleText').textContent = card.dataset.title;
+    document.getElementById('viewBodyText').textContent = card.dataset.body;
+    document.getElementById('viewCategoryText').textContent = `#${card.dataset.category}`;
     document.getElementById('viewModal').classList.add('open');
+}
+
+// Окно редактирования (открывается кнопкой «Редактировать» из подробного вида)
+function openEditModal() {
+    if (!currentActivePost) return;
+    const card = currentActivePost;
+    document.getElementById('editAuthorText').innerText = `UserId ${card.dataset.userId}`;
+    document.getElementById('editTitleInput').value = card.dataset.title;
+    document.getElementById('editBodyInput').value = card.dataset.body;
+    document.getElementById('editCategorySelect').value = card.dataset.category;
+    document.getElementById('viewModal').classList.remove('open');
+    document.getElementById('editModal').classList.add('open');
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').classList.remove('open');
+    currentActivePost = null;
 }
 
 // UPDATE: PUT /posts/{id}
 async function handleUpdatePost() {
-    const newTitle = document.getElementById('viewTitleInput').value.trim();
-    const newBody = document.getElementById('viewBodyInput').value.trim();
+    const newTitle = document.getElementById('editTitleInput').value.trim();
+    const newBody = document.getElementById('editBodyInput').value.trim();
+    const newCategory = document.getElementById('editCategorySelect').value;
     if (!newTitle || !newBody || !currentActivePost) return;
 
     const card = currentActivePost;
@@ -359,15 +391,17 @@ async function handleUpdatePost() {
         const updated = await apiRequest(`${API_URL}/${card.dataset.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title: newTitle, body: newBody })
+            body: JSON.stringify({ title: newTitle, body: newBody, tags: [newCategory] })
         });
         card.dataset.title = updated.title ?? newTitle;
         card.dataset.body = updated.body ?? newBody;
+        card.dataset.category = newCategory;
     } catch (e) {
         // Пост, созданный через /add, на сервере не хранится, поэтому PUT вернёт 404 — это ожидаемо
         if (isLocal && e.status === 404) {
             card.dataset.title = newTitle;
             card.dataset.body = newBody;
+            card.dataset.category = newCategory;
         } else {
             console.error(e);
             showToast('Не удалось сохранить изменения', 'error');
@@ -379,9 +413,10 @@ async function handleUpdatePost() {
 
     card.querySelector('.thread-title').textContent = card.dataset.title;
     card.querySelector('.thread-text').textContent = card.dataset.body;
+    card.querySelector('.thread-category').textContent = `#${card.dataset.category}`;
     saveBtn.disabled = false;
     saveBtn.innerText = 'Сохранить изменения';
-    closeViewModal();
+    closeEditModal();
     showToast('Пост обновлён');
 }
 
@@ -408,7 +443,7 @@ async function handleDeletePost() {
     }
 
     card.remove();
-    closeViewModal();
+    closeEditModal();
     deleteBtn.disabled = false;
     deleteBtn.innerText = 'Удалить ветку';
     updateEmptyState();
