@@ -5,112 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Резюме команды разработчиков</title>
-
   <link rel="stylesheet" href="css/style.css">
-
-  <style>
-    :root {
-      --bg-color: #f3f4f6;
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: var(--bg-color);
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    }
-
-    .team-header {
-      background: linear-gradient(135deg, #1f2937, #111827);
-      color: #ffffff;
-      text-align: center;
-      padding: 50px 20px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      margin-bottom: 30px;
-    }
-
-    .team-header h1 {
-      margin: 0;
-      font-size: 2.8rem;
-      letter-spacing: 1px;
-    }
-
-    .team-header p {
-      color: #9ca3af;
-      margin-top: 12px;
-      font-size: 1.1rem;
-    }
-
-    .team-container {
-      display: flex;
-      flex-direction: column;
-      padding: 0 20px 80px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .sheet {
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    }
-
-    .header-main {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-
-    .profile-photo {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid var(--rule);
-      background-color: var(--chip);
-    }
-
-    @media (max-width: 720px) {
-      .header-main {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
-      }
-    }
-
-    /* Стили для кнопок лаб. работ */
-    .lab-btn {
-      background-color: #f9fafb;
-      color: #374151;
-      border: 1px solid #d1d5db;
-      padding: 6px 12px;
-      font-size: 0.85rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .lab-btn:hover {
-      background-color: #e5e7eb;
-    }
-
-    /* Стили для тестирования классов в Task 2 */
-    .demo-box {
-      padding: 20px;
-      border: 2px dashed #9ca3af;
-      border-radius: 8px;
-      background-color: #f9fafb;
-      color: #374151;
-      transition: all 0.3s ease;
-      font-weight: 600;
-    }
-
-    .demo-box.active {
-      background-color: #10b981;
-      color: white;
-      border-color: #10b981;
-      transform: scale(1.05);
-    }
-  </style>
 </head>
 
 <body>
@@ -122,7 +17,6 @@
   </header>
 
   <main class="team-container">
-
     <div id="welcomeScreen" class="welcome-screen">
       <h2>Добро пожаловать на сайт нашей команды!</h2>
       <p>Здесь вы можете ознакомиться с информацией и навыками каждого участника проекта.</p>
@@ -130,8 +24,6 @@
     </div>
 
     <div id="resumeWrapper" class="resume-content-wrapper">
-
-      <!-- Меню-вкладки -->
       <div class="team-nav">
         <button class="nav-btn active" onclick="switchTab('aituar', this)">Айтуар</button>
         <button class="nav-btn" onclick="switchTab('dinmukhammad', this)">Динмухаммад</button>
@@ -145,12 +37,10 @@
           2</button>
         <button class="nav-btn" onclick="switchTab('task3', this)" style="border-color: #f59e0b; color: #f59e0b;">Task
           3</button>
-        <!-- Новая вкладка Task 5 -->
         <button class="nav-btn" onclick="switchTab('task5', this)" style="border-color: #9333ea; color: #9333ea;">Task 5
-          (CRUD)</button>
+          (Threads)</button>
       </div>
 
-      <!-- БЛОК АЙТУАРА -->
       <section id="aituar" class="resume-section active-tab">
         <div class="sheet">
           <header>
@@ -164,52 +54,17 @@
             <div class="contacts">
               Астана, Казахстан<br>
               <a href="tel:+77756377342">+7 775 637 7342</a><br>
-              <a href="mailto:aktpnr22@gmail.com">aktpnr22@gmail.com</a><br>
-              26 июля 2007 · 19 лет
+              <a href="mailto:aktpnr22@gmail.com">aktpnr22@gmail.com</a>
             </div>
           </header>
-
           <div class="grid">
             <div class="resume-main">
               <section>
                 <h2>О себе</h2>
-                <p class="summary">Студент 3 курса Astana International University. Хочу развиваться в веб-дизайне:
-                  проектировать сайты и обложки, в которых есть креатив, а не шаблон. Учусь доводить идею от наброска до
-                  готового макета и вёрстки, открыт к стажировке и первым коммерческим проектам.</p>
-              </section>
-
-              <section>
-                <h2>Образование</h2>
-                <div class="job">
-                  <div class="job-head">
-                    <h3>Astana International University</h3>
-                    <span class="dates">2024 — настоящее время</span>
-                  </div>
-                  <p class="company">3 курс, бакалавриат · Астана</p>
-                  <ul>
-                    <li>Учебные проекты по дизайну интерфейсов и вёрстке сайтов.</li>
-                    <li>Работа с типографикой, композицией и цветом в макетах.</li>
-                  </ul>
-                </div>
-              </section>
-
-              <section>
-                <h2>Проекты</h2>
-                <div class="job">
-                  <div class="job-head">
-                    <h3>Название проекта</h3>
-                    <span class="dates">2026</span>
-                  </div>
-                  <p class="company">Личный проект</p>
-                  <ul>
-                    <li>Что делали: макет сайта, обложка, редизайн страницы.</li>
-                    <li>В чём была идея и как вы её реализовали.</li>
-                    <li>Ссылка на макет или готовую страницу.</li>
-                  </ul>
-                </div>
+                <p class="summary">Студент 3 курса Astana International University. Хочу развиваться в веб-дизайне,
+                  открыт к стажировке.</p>
               </section>
             </div>
-
             <aside>
               <div class="block">
                 <h2>Навыки</h2>
@@ -218,16 +73,6 @@
                   <li>Figma</li>
                   <li>HTML</li>
                   <li>CSS</li>
-                  <li>Типографика</li>
-                  <li>Дизайн обложек</li>
-                </ul>
-              </div>
-              <div class="block">
-                <h2>Языки</h2>
-                <ul class="stack">
-                  <li><span class="label">Казахский</span>родной</li>
-                  <li><span class="label">Русский</span>свободно</li>
-                  <li><span class="label">Английский</span>уровень</li>
                 </ul>
               </div>
             </aside>
@@ -235,7 +80,6 @@
         </div>
       </section>
 
-      <!-- БЛОК ДИНМУХАММАДА -->
       <section id="dinmukhammad" class="resume-section">
         <div class="sheet">
           <header>
@@ -248,8 +92,7 @@
             </div>
             <div class="contacts">
               Астана, Казахстан<br>
-              <a href="tel:+77088164050">+7 708 816 40 50</a><br>
-              <a href="mailto:daurenbekovd30@gmail.com">daurenbekovd30@gmail.com</a>
+              <a href="tel:+77088164050">+7 708 816 40 50</a>
             </div>
           </header>
           <div class="grid">
@@ -260,13 +103,6 @@
                   <div class="job-head">
                     <h3>Colins</h3>
                   </div>
-                  <p class="company">Опыт работы в компании</p>
-                </div>
-                <div class="job">
-                  <div class="job-head">
-                    <h3>Mnata</h3>
-                  </div>
-                  <p class="company">Опыт работы в компании</p>
                 </div>
               </section>
             </div>
@@ -274,21 +110,8 @@
               <div class="block">
                 <h2>Навыки</h2>
                 <ul class="chips">
-                  <li>Дисциплинированность</li>
-                  <li>Образованность</li>
                   <li>Лидерство</li>
-                  <li>Коммуникабельность</li>
-                  <li>Ответственность</li>
                   <li>Стратегия</li>
-                </ul>
-              </div>
-              <div class="block">
-                <h2>Языки</h2>
-                <ul class="stack">
-                  <li><span class="label">Казахский</span>родной</li>
-                  <li><span class="label">Русский</span>родной</li>
-                  <li><span class="label">Английский</span>свободно</li>
-                  <li><span class="label">Турецкий</span>базовый</li>
                 </ul>
               </div>
             </aside>
@@ -296,7 +119,6 @@
         </div>
       </section>
 
-      <!-- БЛОК ТЕМИРЛАНА -->
       <section id="temirlan" class="resume-section">
         <div class="sheet">
           <header>
@@ -309,30 +131,24 @@
             </div>
             <div class="contacts">
               Астана, Казахстан<br>
-              <a href="https://github.com/твоя_ссылка" target="_blank">GitHub: @твоя_ссылка</a>
+              <a href="https://github.com" target="_blank">GitHub</a>
             </div>
           </header>
           <div class="grid">
             <div class="resume-main">
               <section>
                 <h2>Обо мне</h2>
-                <p class="summary">Студент, увлекающийся архитектурой ЭВМ и разработкой программного обеспечения. Имею
-                  практический опыт написания логики на Java, а также обработки и визуализации данных на Python (Pandas,
-                  Matplotlib). Уверенно работаю в командных проектах, используя Git, GitHub и VS Code.</p>
+                <p class="summary">Студент, увлекающийся архитектурой ЭВМ и разработкой программного обеспечения. Опыт
+                  на Java и Python.</p>
               </section>
             </div>
             <aside>
               <div class="block">
-                <h2>Технический стек</h2>
+                <h2>Стек</h2>
                 <ul class="chips">
                   <li>Python</li>
-                  <li>Pandas</li>
-                  <li>Matplotlib</li>
                   <li>Java</li>
-                  <li>Git & GitHub</li>
-                  <li>VS Code</li>
-                  <li>HTML / CSS</li>
-                  <li>Архитектура ЭВМ</li>
+                  <li>Git</li>
                 </ul>
               </div>
             </aside>
@@ -340,7 +156,6 @@
         </div>
       </section>
 
-      <!-- БЛОК АЛДИЯРА -->
       <section id="aldiyar" class="resume-section">
         <div class="sheet">
           <header>
@@ -353,47 +168,17 @@
             </div>
             <div class="contacts">
               Астана, Казахстан<br>
-              <a href="tel:+77089179090">+7 708 917 9090</a><br>
-              <a href="mailto:example@gmail.com">example@gmail.com</a><br>
-              <a href="https://github.com/" target="_blank">GitHub</a>
+              <a href="tel:+77089179090">+7 708 917 9090</a>
             </div>
           </header>
           <div class="grid">
             <div class="resume-main">
-              <section>
-                <h2>Обо мне</h2>
-                <p class="summary">Студент Astana International University, интересующийся современными технологиями,
-                  искусственным интеллектом и автоматизацией бизнес-процессов.</p>
-              </section>
-              <section>
-                <h2>Образование</h2>
-                <div class="job">
-                  <div class="job-head">
-                    <h3>Astana International University</h3>
-                  </div>
-                  <p class="company">Бакалавриат · Вычислительная техника и ПО</p>
-                </div>
-              </section>
               <section>
                 <h2>Проекты</h2>
                 <div class="job">
                   <div class="job-head">
                     <h3>AI Customer Support Bot</h3>
                   </div>
-                  <p class="company">n8n • Telegram • AI</p>
-                  <ul>
-                    <li>Создание AI-бота для автоматизации общения с клиентами.</li>
-                    <li>Автоматическая обработка входящих сообщений.</li>
-                  </ul>
-                </div>
-                <div class="job">
-                  <div class="job-head">
-                    <h3>Instagram Automation</h3>
-                  </div>
-                  <p class="company">ManyChat • AI</p>
-                  <ul>
-                    <li>Изучение автоматизации общения с клиентами в Instagram.</li>
-                  </ul>
                 </div>
               </section>
             </div>
@@ -403,19 +188,6 @@
                 <ul class="chips">
                   <li>AI Automation</li>
                   <li>n8n</li>
-                  <li>Telegram Bots</li>
-                  <li>ManyChat</li>
-                  <li>Google Sheets</li>
-                  <li>HTML / CSS</li>
-                  <li>Git / GitHub</li>
-                </ul>
-              </div>
-              <div class="block">
-                <h2>Языки</h2>
-                <ul class="stack">
-                  <li><span class="label">Казахский</span>родной</li>
-                  <li><span class="label">Русский</span>свободно</li>
-                  <li><span class="label">Английский</span>B2</li>
                 </ul>
               </div>
             </aside>
@@ -423,7 +195,6 @@
         </div>
       </section>
 
-      <!-- БЛОК РАТМИРА -->
       <section id="ratmir" class="resume-section">
         <div class="sheet">
           <header>
@@ -436,40 +207,17 @@
             </div>
             <div class="contacts">
               Астана, Казахстан<br>
-              <a href="tel:+77000000000">+7 700 000 00 00</a><br>
-              <a href="mailto:ratmir.dev@example.com">ratmir.dev@example.com</a><br>
-              <a href="https://github.com/ratmir-dev" target="_blank">GitHub</a>
+              <a href="mailto:ratmir.dev@example.com">ratmir.dev@example.com</a>
             </div>
           </header>
           <div class="grid">
             <div class="resume-main">
-              <section>
-                <h2>О себе</h2>
-                <p class="summary">Студент Astana International University. Специализируюсь на серверной разработке,
-                  проектировании баз данных и создании надежных API. Стремлюсь к написанию чистого кода и построению
-                  масштабируемой архитектуры для веб-приложений.</p>
-              </section>
-              <section>
-                <h2>Образование</h2>
-                <div class="job">
-                  <div class="job-head">
-                    <h3>Astana International University</h3>
-                    <span class="dates">2024 — настоящее время</span>
-                  </div>
-                  <p class="company">Бакалавриат · Вычислительная техника и ПО</p>
-                </div>
-              </section>
               <section>
                 <h2>Проекты</h2>
                 <div class="job">
                   <div class="job-head">
                     <h3>REST API для E-commerce</h3>
                   </div>
-                  <p class="company">Node.js • Express • PostgreSQL</p>
-                  <ul>
-                    <li>Проектирование и разработка серверной части интернет-магазина.</li>
-                    <li>Интеграция системы безопасной авторизации и обработки данных.</li>
-                  </ul>
                 </div>
               </section>
             </div>
@@ -478,19 +226,7 @@
                 <h2>Навыки</h2>
                 <ul class="chips">
                   <li>Node.js</li>
-                  <li>Python</li>
                   <li>PostgreSQL</li>
-                  <li>Docker</li>
-                  <li>REST API</li>
-                  <li>Git / GitHub</li>
-                </ul>
-              </div>
-              <div class="block">
-                <h2>Языки</h2>
-                <ul class="stack">
-                  <li><span class="label">Казахский</span>родной</li>
-                  <li><span class="label">Русский</span>свободно</li>
-                  <li><span class="label">Английский</span>B2</li>
                 </ul>
               </div>
             </aside>
@@ -498,103 +234,70 @@
         </div>
       </section>
 
-      <!-- БЛОК TASK 1 -->
+      <!-- ТАСК 1 -->
       <section id="task1" class="resume-section">
-        <div class="sheet" style="background: var(--bg-color); padding: 40px; border-radius: 12px; box-shadow: none;">
-          <div
-            style="background: white; padding: 24px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); max-width: 750px; margin: 0 auto; text-align: center;">
-            <h2 style="font-size: 1.3rem; margin-bottom: 20px; border: none; text-align: left;">
-              Управление элементами (Task 1)</h2>
-
-            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 30px; justify-content: center;">
+        <div class="sheet task-sheet">
+          <div class="task-card">
+            <h2>Управление элементами (Task 1)</h2>
+            <div class="task-buttons-row">
               <button class="lab-btn" onclick="addText()">1. Добавить текст</button>
               <button class="lab-btn" onclick="changeText()">2. Заменить текст</button>
               <button class="lab-btn" onclick="deleteText()">3. Удалить текст</button>
               <button class="lab-btn" onclick="createParagraph()">4. Изменяемый абзац</button>
             </div>
-
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 16px; min-height: 100px;">
-              <div id="paragraphContainer"></div>
-            </div>
+            <div id="paragraphContainer" class="task-container-center"></div>
           </div>
         </div>
       </section>
 
-      <!-- БЛОК TASK 2 -->
+      <!-- ТАСК 2 -->
       <section id="task2" class="resume-section">
-        <div class="sheet" style="background: var(--bg-color); padding: 40px; border-radius: 12px; box-shadow: none;">
-          <div
-            style="background: white; padding: 24px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); max-width: 750px; margin: 0 auto; text-align: center;">
-            <h2 style="font-size: 1.3rem; margin-bottom: 20px; border: none; text-align: left;">
-              Управление классами (Task 2)</h2>
-
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px 0;">
-              <div id="task2Target" class="demo-box">
-                Тестовый элемент
-              </div>
+        <div class="sheet task-sheet">
+          <div class="task-card">
+            <h2>Управление классами (Task 2)</h2>
+            <div class="task-container-center">
+              <div id="task2Target" class="demo-box">Тестовый элемент</div>
               <button class="lab-btn" onclick="toggleClassAndShow()"
                 style="background-color: #8b5cf6; color: white; border-color: #8b5cf6;">
                 Переключить класс 'active'
               </button>
-              <p id="classListOutput"
-                style="color: #4b5563; font-family: monospace; background: #f3f4f6; padding: 10px 20px; border-radius: 6px; border: 1px solid #e5e7eb; margin: 0;">
-                Классы элемента: demo-box
-              </p>
-              <small style="color: #9ca3af;">(Также результат выведен в консоль разработчика F12)</small>
+              <p id="classListOutput" class="code-output">Классы элемента: demo-box</p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- БЛОК TASK 3 -->
+      <!-- ТАСК 3 -->
       <section id="task3" class="resume-section">
-        <div class="sheet" style="background: var(--bg-color); padding: 40px; border-radius: 12px; box-shadow: none;">
+        <div class="sheet task-sheet">
           <div class="task-card">
-            <h2 style="font-size: 1.3rem; margin-bottom: 20px; border: none; text-align: left;">
-              Генератор таблицы (Task 3)</h2>
-
+            <h2>Генератор таблицы (Task 3)</h2>
             <div class="table-controls">
               <label>Строки: <input type="number" id="rowsInput" min="1" max="30" value="5"></label>
               <label>Столбцы: <input type="number" id="colsInput" min="1" max="30" value="5"></label>
               <button class="lab-btn" onclick="handleGenerateTable()">Создать таблицу</button>
-            </div>
-
-            <div class="table-controls">
               <label>Цвет: <input type="color" id="paintColor" value="#ef4444"></label>
+              <button class="lab-btn" onclick="handleCountColor()">Подсчитать ячейки</button>
             </div>
-
             <p id="tableResult"></p>
-            <div id="colorStats" class="color-stats"></div>
             <div id="tableContainer"></div>
           </div>
         </div>
       </section>
 
-      <!-- БЛОК TASK 5 (CRUD СИСТЕМА) -->
+      <!-- ТАСК 5 (THREADS CRUD) -->
       <section id="task5" class="resume-section">
-        <div class="sheet" style="background: var(--bg-color); padding: 40px; border-radius: 12px; box-shadow: none;">
-          <div class="task-card" style="max-width: 800px; margin: 0 auto;">
-            <h2
-              style="font-size: 1.3rem; margin-bottom: 20px; text-align: left; border-bottom: 1px solid var(--rule); padding-bottom: 10px;">
-              Система управления постами (CRUD via DummyJSON)
-            </h2>
-
-            <!-- Форма CREATE -->
-            <form id="crudForm" onsubmit="createPost(event)"
-              style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; text-align: left; background: var(--bg-color); padding: 20px; border-radius: 8px; border: 1px solid #d1d5db;">
-              <h3 style="margin: 0; font-size: 1.1rem;">Создать новый пост</h3>
-              <input type="text" id="postTitle" placeholder="Заголовок поста" required
-                style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #d1d5db;">
-              <textarea id="postBody" placeholder="Текст поста" required
-                style="width: 100%; min-height: 80px; padding: 10px; border-radius: 6px; border: 1px solid #d1d5db;"></textarea>
-              <button type="submit" class="main-btn"
-                style="padding: 10px; font-size: 1rem; align-self: flex-start; background-color: #10b981;">Добавить пост
-                (Create)</button>
-            </form>
-
-            <!-- Список READ, UPDATE, DELETE -->
-            <div id="postsContainer" style="display: flex; flex-direction: column; gap: 16px;">
-              <!-- Карточки постов будут генерироваться здесь через JS -->
+        <div class="threads-wrapper">
+          <div class="threads-header-bar">
+            <h2>Лента Ветвей (Threads)</h2>
+            <button class="threads-create-btn" onclick="openCreateModal()">
+              <span>+</span> Создать пост
+            </button>
+          </div>
+          <div id="threadsStatus" class="threads-status" style="display: none;"></div>
+          <div id="threadsContainer" class="threads-list">
+            <div id="emptyPostsPlaceholder" class="threads-empty">
+              Постов пока нет. Нажмите "Создать пост", чтобы опубликовать первую ветку!
             </div>
           </div>
         </div>
@@ -602,6 +305,57 @@
 
     </div>
   </main>
+
+  <!-- МОДАЛЬНЫЕ ОКНА (СТРОГО ПЕРЕД СКРИПТОМ) -->
+  <div id="createModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Новая ветка</h3>
+        <button class="modal-close" onclick="closeCreateModal()">✕</button>
+      </div>
+      <form id="createPostForm" onsubmit="handleCreatePost(event)">
+        <div class="modal-body">
+          <label class="input-label">Выберите автора:</label>
+          <select id="postUserSelect" class="custom-select">
+            <option value="1">UserId 1</option>
+            <option value="2">UserId 2</option>
+          </select>
+          <label class="input-label">Заголовок:</label>
+          <input type="text" id="postTitleInput" class="custom-input" placeholder="Заголовок поста" maxlength="100"
+            required>
+          <label class="input-label">Текст публикации:</label>
+          <textarea id="postBodyInput" class="custom-textarea" placeholder="Что нового?" required></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="closeCreateModal()">Отмена</button>
+          <button type="submit" id="submitCreateBtn" class="btn-primary">Опубликовать</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="viewModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span id="viewAuthorText" class="author-badge">UserId 1</span>
+        <button class="modal-close" onclick="closeViewModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <label class="input-label">Заголовок:</label>
+        <input type="text" id="viewTitleInput" class="custom-input" maxlength="100" required>
+        <label class="input-label">Содержимое поста:</label>
+        <textarea id="viewBodyInput" class="custom-textarea" required></textarea>
+      </div>
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button type="button" id="deletePostBtn" class="btn-danger" onclick="handleDeletePost()">Удалить ветку</button>
+        <div style="display: flex; gap: 10px;">
+          <button type="button" class="btn-secondary" onclick="closeViewModal()">Отмена</button>
+          <button type="button" id="saveEditBtn" class="btn-primary" onclick="handleUpdatePost()">Сохранить
+            изменения</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="js/script.js"></script>
 </body>

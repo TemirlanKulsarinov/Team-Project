@@ -1,33 +1,22 @@
-// Функция открытия раздела с резюме с главного экрана
+// Переключение главной секции
 function showResumeSection() {
     document.getElementById('welcomeScreen').style.display = 'none';
     document.getElementById('resumeWrapper').classList.add('active-section');
 }
 
-// Функция переключения между вкладками
+// Переключение вкладок
 function switchTab(tabId, buttonElement) {
-    const sections = document.querySelectorAll('.resume-section');
-    sections.forEach(section => {
+    document.querySelectorAll('.resume-section').forEach(section => {
         section.classList.remove('active-tab');
     });
-
-    const buttons = document.querySelectorAll('.nav-btn');
-    buttons.forEach(btn => {
+    document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-
     document.getElementById(tabId).classList.add('active-tab');
     buttonElement.classList.add('active');
-
-    // Автоматическая загрузка данных при открытии Task 5 (Read)
-    if (tabId === 'task5') {
-        fetchPosts();
-    }
 }
 
-// ==========================================
-// ЛАБОРАТОРНАЯ РАБОТА: TASK 1
-// ==========================================
+// TASK 1: Управление элементами
 function addText() {
     if (!document.getElementById('bottomLeftText')) {
         const newDiv = document.createElement('div');
@@ -37,8 +26,6 @@ function addText() {
         newDiv.style.bottom = '20px';
         newDiv.style.left = '20px';
         newDiv.style.color = '#4b5563';
-        newDiv.style.fontSize = '14px';
-        newDiv.style.transition = 'all 0.3s ease';
         document.body.appendChild(newDiv);
     }
 }
@@ -47,16 +34,13 @@ function changeText() {
     const target = document.getElementById('bottomLeftText');
     if (target) {
         target.innerText = 'Это новый элемент';
-        target.style.color = '#111827';
         target.style.fontWeight = 'bold';
     }
 }
 
 function deleteText() {
     const target = document.getElementById('bottomLeftText');
-    if (target) {
-        target.remove();
-    }
+    if (target) target.remove();
 }
 
 function createParagraph() {
@@ -66,11 +50,8 @@ function createParagraph() {
     p.innerText = 'Это изменяемый абзац.';
     p.style.cursor = 'pointer';
     p.style.padding = '12px 24px';
-    p.style.background = '#f3f4f6';
     p.style.border = '1px solid #e5e7eb';
     p.style.borderRadius = '8px';
-    p.style.display = 'inline-block';
-    p.style.transition = 'all 0.2s ease';
 
     let isChanged = false;
     p.addEventListener('click', function () {
@@ -87,25 +68,22 @@ function createParagraph() {
     container.appendChild(p);
 }
 
-// ==========================================
-// ЛАБОРАТОРНАЯ РАБОТА: TASK 2
-// ==========================================
+// TASK 2: Управление классами
 function toggleClassAndShow() {
     const targetElement = document.getElementById('task2Target');
     const outputParagraph = document.getElementById('classListOutput');
     targetElement.classList.toggle('active');
-    const currentClasses = targetElement.className;
-    console.log("Текущие классы элемента:", currentClasses);
-    outputParagraph.innerText = "Классы элемента: " + currentClasses;
+    outputParagraph.innerText = "Классы элемента: " + targetElement.className;
 }
 
-// ==========================================
-// ЛАБОРАТОРНАЯ РАБОТА: TASK 3 (ТАБЛИЦА)
-// ==========================================
-function generateTable(rows, cols) {
+// TASK 3: Таблица
+function handleGenerateTable() {
+    const rows = parseInt(document.getElementById('rowsInput').value, 10);
+    const cols = parseInt(document.getElementById('colsInput').value, 10);
     const container = document.getElementById('tableContainer');
+
+    if (!rows || !cols) return;
     container.innerHTML = '';
-    document.getElementById('tableResult').innerText = '';
 
     const table = document.createElement('table');
     for (let i = 0; i < rows; i++) {
@@ -124,46 +102,19 @@ function generateTable(rows, cols) {
     container.appendChild(table);
 }
 
-function countCellsByColor(color) {
+function handleCountColor() {
+    const color = document.getElementById('paintColor').value.toLowerCase();
     const cells = document.querySelectorAll('#tableContainer td');
     let count = 0;
-    cells.forEach(td => {
-        if (td.dataset.color === color.toLowerCase()) count++;
-    });
-    return count;
+    cells.forEach(td => { if (td.dataset.color === color) count++; });
+    document.getElementById('tableResult').innerText = `Закрашено ячеек: ${count}`;
 }
 
-function handleGenerateTable() {
-    const rows = parseInt(document.getElementById('rowsInput').value, 10);
-    const cols = parseInt(document.getElementById('colsInput').value, 10);
-
-    if (!rows || !cols || rows < 1 || cols < 1 || rows > 30 || cols > 30) {
-        alert('Введите число строк и столбцов от 1 до 30');
-        return;
-    }
-    generateTable(rows, cols);
-}
-
-function handleCountColor() {
-    if (!document.querySelector('#tableContainer td')) {
-        alert('Сначала создайте таблицу');
-        return;
-    }
-    const color = document.getElementById('paintColor').value;
-    const n = countCellsByColor(color);
-    document.getElementById('tableResult').innerText = `Ячеек цвета ${color}: ${n}`;
-}
-
-// ==========================================
-// ЛАБОРАТОРНАЯ РАБОТА: TASK 4 (ТЁМНАЯ ТЕМА)
-// ==========================================
+// TASK 4: Тёмная тема
 function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     const btn = document.getElementById('themeToggle');
-    if (btn) {
-        btn.textContent = theme === 'dark' ? '☀️ Светлая тема' : '🌙 Тёмная тема';
-    }
-    try { localStorage.setItem('theme', theme); } catch (e) { }
+    if (btn) btn.textContent = theme === 'dark' ? '☀️ Светлая тема' : '🌙 Тёмная тема';
 }
 
 function toggleTheme() {
@@ -171,146 +122,274 @@ function toggleTheme() {
     applyTheme(current === 'dark' ? 'light' : 'dark');
 }
 
-(function initTheme() {
-    let saved = null;
-    try { saved = localStorage.getItem('theme'); } catch (e) { }
-    if (!saved) {
-        saved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    applyTheme(saved);
-})();
-
-// ==========================================
-// ЛАБОРАТОРНАЯ РАБОТА: TASK 5 (CRUD СИСТЕМА)
-// ==========================================
+// TASK 5: CRUD (Threads) через dummyjson.com
 const API_URL = 'https://dummyjson.com/posts';
-let isPostsLoaded = false;
+const POSTS_LIMIT = 10;
+let currentActivePost = null;
+let localPostCounter = 0;
 
-// READ (Чтение - GET)
-async function fetchPosts() {
-    if (isPostsLoaded) return; // Защита от повторной загрузки
+// Единая обёртка над fetch: бросает ошибку, если сервер ответил не 2xx
+async function apiRequest(url, options = {}) {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+        const err = new Error(`HTTP ${response.status}`);
+        err.status = response.status;
+        throw err;
+    }
+    return response.json();
+}
 
-    const container = document.getElementById('postsContainer');
-    container.innerHTML = '<p style="color: #6b7280; text-align: center;">Загрузка данных с сервера...</p>';
+function setStatus(message, type = '') {
+    const el = document.getElementById('threadsStatus');
+    el.className = 'threads-status' + (type ? ' ' + type : '');
+    el.textContent = message;
+    el.style.display = message ? 'block' : 'none';
+}
+
+function updateEmptyState() {
+    const hasCards = document.querySelectorAll('#threadsContainer .thread-card').length > 0;
+    document.getElementById('emptyPostsPlaceholder').style.display = hasCards ? 'none' : 'block';
+}
+
+// READ: GET /posts?limit=10
+async function loadPosts() {
+    document.querySelectorAll('#threadsContainer .thread-card').forEach(card => card.remove());
+    document.getElementById('emptyPostsPlaceholder').style.display = 'none';
+    setStatus('Загрузка постов...');
 
     try {
-        // Получаем 3 поста, чтобы не перегружать страницу
-        const response = await fetch(`${API_URL}?limit=3`);
-        const data = await response.json();
-
-        container.innerHTML = '';
-        data.posts.forEach(post => renderPost(post));
-        isPostsLoaded = true;
-    } catch (error) {
-        container.innerHTML = `<p style="color: red;">Ошибка загрузки: ${error.message}</p>`;
+        const data = await apiRequest(`${API_URL}?limit=${POSTS_LIMIT}`);
+        data.posts.forEach(post => renderThreadPost(post));
+        setStatus('');
+        updateEmptyState();
+    } catch (e) {
+        console.error(e);
+        setStatus('Не удалось загрузить посты. ', 'error');
+        const retryBtn = document.createElement('button');
+        retryBtn.type = 'button';
+        retryBtn.className = 'threads-retry-btn';
+        retryBtn.textContent = 'Повторить';
+        retryBtn.addEventListener('click', loadPosts);
+        document.getElementById('threadsStatus').appendChild(retryBtn);
     }
 }
 
-// CREATE (Создание - POST)
-async function createPost(event) {
-    event.preventDefault(); // Останавливаем перезагрузку страницы
-    const title = document.getElementById('postTitle').value;
-    const body = document.getElementById('postBody').value;
-    const submitBtn = event.target.querySelector('button');
+function openCreateModal() { document.getElementById('createModal').classList.add('open'); }
+function closeCreateModal() {
+    document.getElementById('createModal').classList.remove('open');
+    document.getElementById('createPostForm').reset();
+}
 
-    submitBtn.innerText = 'Создание...';
+function closeViewModal() {
+    document.getElementById('viewModal').classList.remove('open');
+    currentActivePost = null;
+}
+
+// CREATE: POST /posts/add
+async function handleCreatePost(event) {
+    event.preventDefault();
+    const userId = Number(document.getElementById('postUserSelect').value);
+    const titleText = document.getElementById('postTitleInput').value.trim();
+    const bodyText = document.getElementById('postBodyInput').value.trim();
+    if (!titleText || !bodyText) return;
+
+    const submitBtn = document.getElementById('submitCreateBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerText = 'Загрузка...';
 
     try {
-        const response = await fetch(`${API_URL}/add`, {
+        const created = await apiRequest(`${API_URL}/add`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                title: title,
-                body: body,
-                userId: 1
-            })
+            body: JSON.stringify({ title: titleText, body: bodyText, userId: userId })
         });
-
-        const newPost = await response.json();
-        // Генерируем уникальный ID для фронтенда, так как Fake API часто возвращает одинаковый ID
-        newPost.id = Date.now();
-
-        renderPost(newPost, true); // Добавляем пост в начало списка
-        event.target.reset(); // Очищаем форму
-        alert('Пост успешно создан на сервере!');
-    } catch (error) {
-        alert('Ошибка при создании: ' + error.message);
+        // dummyjson не сохраняет данные, поэтому такой пост существует только до перезагрузки
+        renderThreadPost({
+            id: created.id,
+            title: created.title ?? titleText,
+            body: created.body ?? bodyText,
+            userId: created.userId ?? userId
+        }, true, true);
+        updateEmptyState();
+        closeCreateModal();
+    } catch (e) {
+        console.error(e);
+        alert('Не удалось создать пост. Проверьте интернет и попробуйте ещё раз.');
     } finally {
-        submitBtn.innerText = 'Добавить пост (Create)';
+        submitBtn.disabled = false;
+        submitBtn.innerText = 'Опубликовать';
     }
 }
 
-// UPDATE (Обновление - PUT)
-async function editPost(id) {
-    const postCard = document.getElementById(`post-${id}`);
-    const currentTitle = postCard.querySelector('h3').innerText;
-    const currentBody = postCard.querySelector('p').innerText;
+function renderThreadPost(post, prepend = false, isLocal = false) {
+    const container = document.getElementById('threadsContainer');
+    localPostCounter++;
 
-    const newTitle = prompt('Отредактируйте заголовок:', currentTitle);
-    const newBody = prompt('Отредактируйте текст:', currentBody);
+    // reactions в dummyjson — объект { likes, dislikes } (в старых версиях — число)
+    const initialLikes = (post.reactions && typeof post.reactions === 'object')
+        ? post.reactions.likes
+        : (post.reactions || 0);
 
-    // Если пользователь не нажал Отмена и ввел новые данные
-    if (newTitle && newBody && (newTitle !== currentTitle || newBody !== currentBody)) {
-        try {
-            // Отправляем PUT запрос
-            await fetch(`${API_URL}/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    title: newTitle,
-                    body: newBody,
-                })
-            });
+    const postCard = document.createElement('div');
+    postCard.className = 'thread-card';
+    // DOM-id уникален всегда, а настоящий id с сервера лежит в data-id
+    // (POST /add каждый раз возвращает один и тот же id, поэтому его нельзя использовать как DOM-id)
+    postCard.id = `post-local-${localPostCounter}`;
+    postCard.dataset.id = post.id;
+    postCard.dataset.local = isLocal ? 'true' : 'false';
+    postCard.dataset.userId = post.userId;
+    postCard.dataset.title = post.title || '';
+    postCard.dataset.body = post.body;
+    postCard.dataset.likes = initialLikes;
+    postCard.dataset.reposts = 0;
 
-            // Локально обновляем DOM (интерфейс)
-            postCard.querySelector('h3').innerText = newTitle;
-            postCard.querySelector('p').innerText = newBody;
-            alert('Пост успешно обновлен!');
-        } catch (error) {
-            alert('Ошибка сервера, но интерфейс обновлен (Fake API специфика).');
-        }
-    }
-}
+    const avatarUrl = post.userId == 2
+        ? 'https://api.dicebear.com/7.x/bottts/svg?seed=User2'
+        : 'https://api.dicebear.com/7.x/bottts/svg?seed=User1';
 
-// DELETE (Удаление - DELETE)
-async function deletePost(id) {
-    if (confirm('Вы точно хотите удалить этот пост?')) {
-        try {
-            await fetch(`${API_URL}/${id}`, {
-                method: 'DELETE',
-            });
-
-            // Удаляем карточку со страницы
-            document.getElementById(`post-${id}`).remove();
-            alert('Пост успешно удален!');
-        } catch (error) {
-            alert('Ошибка при удалении: ' + error.message);
-        }
-    }
-}
-
-// Вспомогательная функция для отрисовки карточки поста
-function renderPost(post, prepend = false) {
-    const container = document.getElementById('postsContainer');
-
-    const postEl = document.createElement('div');
-    postEl.id = `post-${post.id}`;
-    // Используем инлайн стили, чтобы избежать правок в CSS файле
-    postEl.style.cssText = 'border: 1px solid #d1d5db; padding: 20px; border-radius: 8px; text-align: left; background: var(--card, #fff); box-shadow: 0 2px 5px rgba(0,0,0,0.05);';
-
-    postEl.innerHTML = `
-        <h3 style="margin: 0 0 10px; font-size: 1.2rem;">${post.title}</h3>
-        <p style="margin: 0 0 15px; font-size: 0.95rem; color: var(--muted);">${post.body}</p>
-        <div style="display: flex; gap: 10px;">
-            <button class="lab-btn" onclick="editPost(${post.id})" style="border-color: #f59e0b; color: #f59e0b; background: transparent;">Редактировать</button>
-            <button class="lab-btn" onclick="deletePost(${post.id})" style="border-color: #ef4444; color: #ef4444; background: transparent;">Удалить</button>
+    postCard.innerHTML = `
+        <img src="${avatarUrl}" class="thread-avatar" alt="">
+        <div class="thread-content">
+            <div class="thread-header-info">
+                <span class="thread-author"></span>
+            </div>
+            <h3 class="thread-title"></h3>
+            <p class="thread-text"></p>
+            <div class="thread-actions">
+                <button type="button" class="action-btn like-btn">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span class="like-count"></span>
+                </button>
+                <button type="button" class="action-btn repost-btn">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"></path><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><path d="M7 23l-4-4 4-4"></path><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+                    <span class="repost-count">0</span>
+                </button>
+            </div>
         </div>
     `;
 
-    // Если prepend=true, вставляем наверх (используется при создании)
+    // textContent вместо innerHTML — защита от XSS
+    postCard.querySelector('.thread-author').textContent = `UserId ${post.userId}`;
+    postCard.querySelector('.thread-title').textContent = post.title || '';
+    postCard.querySelector('.thread-text').textContent = post.body;
+    postCard.querySelector('.like-count').textContent = initialLikes;
+
+    postCard.querySelector('.like-btn').addEventListener('click', (e) => toggleLike(e, postCard));
+    postCard.querySelector('.repost-btn').addEventListener('click', (e) => toggleRepost(e, postCard));
+    postCard.addEventListener('click', (e) => {
+        if (!e.target.closest('.action-btn')) openViewModal(postCard);
+    });
+
     if (prepend) {
-        container.prepend(postEl);
+        container.insertBefore(postCard, container.querySelector('.thread-card'));
     } else {
-        container.appendChild(postEl);
+        container.appendChild(postCard);
     }
 }
+
+function toggleLike(e, card) {
+    e.stopPropagation();
+    const btn = card.querySelector('.like-btn');
+    let likes = parseInt(card.dataset.likes, 10);
+    if (btn.classList.toggle('liked')) {
+        likes++;
+    } else {
+        likes--;
+    }
+    card.dataset.likes = likes;
+    card.querySelector('.like-count').innerText = likes;
+}
+
+function toggleRepost(e, card) {
+    e.stopPropagation();
+    const btn = card.querySelector('.repost-btn');
+    let reposts = parseInt(card.dataset.reposts, 10);
+    if (btn.classList.toggle('reposted')) {
+        reposts++;
+    } else {
+        reposts--;
+    }
+    card.dataset.reposts = reposts;
+    card.querySelector('.repost-count').innerText = reposts;
+}
+
+function openViewModal(card) {
+    currentActivePost = card;
+    document.getElementById('viewAuthorText').innerText = `UserId ${card.dataset.userId}`;
+    document.getElementById('viewTitleInput').value = card.dataset.title;
+    document.getElementById('viewBodyInput').value = card.dataset.body;
+    document.getElementById('viewModal').classList.add('open');
+}
+
+// UPDATE: PUT /posts/{id}
+async function handleUpdatePost() {
+    const newTitle = document.getElementById('viewTitleInput').value.trim();
+    const newBody = document.getElementById('viewBodyInput').value.trim();
+    if (!newTitle || !newBody || !currentActivePost) return;
+
+    const card = currentActivePost;
+    const isLocal = card.dataset.local === 'true';
+    const saveBtn = document.getElementById('saveEditBtn');
+    saveBtn.disabled = true;
+    saveBtn.innerText = 'Сохранение...';
+
+    try {
+        const updated = await apiRequest(`${API_URL}/${card.dataset.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: newTitle, body: newBody })
+        });
+        card.dataset.title = updated.title ?? newTitle;
+        card.dataset.body = updated.body ?? newBody;
+    } catch (e) {
+        // Пост, созданный через /add, на сервере не хранится, поэтому PUT вернёт 404 — это ожидаемо
+        if (isLocal && e.status === 404) {
+            card.dataset.title = newTitle;
+            card.dataset.body = newBody;
+        } else {
+            console.error(e);
+            alert('Не удалось сохранить изменения. Попробуйте ещё раз.');
+            saveBtn.disabled = false;
+            saveBtn.innerText = 'Сохранить изменения';
+            return;
+        }
+    }
+
+    card.querySelector('.thread-title').textContent = card.dataset.title;
+    card.querySelector('.thread-text').textContent = card.dataset.body;
+    saveBtn.disabled = false;
+    saveBtn.innerText = 'Сохранить изменения';
+    closeViewModal();
+}
+
+// DELETE: DELETE /posts/{id}
+async function handleDeletePost() {
+    if (!currentActivePost) return;
+
+    const card = currentActivePost;
+    const isLocal = card.dataset.local === 'true';
+    const deleteBtn = document.getElementById('deletePostBtn');
+    deleteBtn.disabled = true;
+    deleteBtn.innerText = 'Удаление...';
+
+    try {
+        await apiRequest(`${API_URL}/${card.dataset.id}`, { method: 'DELETE' });
+    } catch (e) {
+        if (!(isLocal && e.status === 404)) {
+            console.error(e);
+            alert('Не удалось удалить пост. Попробуйте ещё раз.');
+            deleteBtn.disabled = false;
+            deleteBtn.innerText = 'Удалить ветку';
+            return;
+        }
+    }
+
+    card.remove();
+    closeViewModal();
+    deleteBtn.disabled = false;
+    deleteBtn.innerText = 'Удалить ветку';
+    updateEmptyState();
+}
+
+// Загружаем посты с сервера при открытии страницы
+document.addEventListener('DOMContentLoaded', loadPosts);
