@@ -104,7 +104,6 @@
       font-weight: 600;
     }
 
-    /* Этот класс мы будем добавлять и удалять через JS */
     .demo-box.active {
       background-color: #10b981;
       color: white;
@@ -117,7 +116,6 @@
 <body>
 
   <header class="team-header">
-    <!-- Task 4: переключатель темы -->
     <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">🌙 Тёмная тема</button>
     <h1>Команда разработки</h1>
     <p>Совместный веб-проект | Portfolio 2026</p>
@@ -125,7 +123,6 @@
 
   <main class="team-container">
 
-    <!-- Главный экран -->
     <div id="welcomeScreen" class="welcome-screen">
       <h2>Добро пожаловать на сайт нашей команды!</h2>
       <p>Здесь вы можете ознакомиться с информацией и навыками каждого участника проекта.</p>
@@ -142,13 +139,15 @@
         <button class="nav-btn" onclick="switchTab('aldiyar', this)">Алдияр</button>
         <button class="nav-btn" onclick="switchTab('ratmir', this)">Ратмир</button>
 
-        <!-- Вкладки заданий -->
         <button class="nav-btn" onclick="switchTab('task1', this)" style="border-color: #2563eb; color: #2563eb;">Task
           1</button>
         <button class="nav-btn" onclick="switchTab('task2', this)" style="border-color: #8b5cf6; color: #8b5cf6;">Task
           2</button>
         <button class="nav-btn" onclick="switchTab('task3', this)" style="border-color: #f59e0b; color: #f59e0b;">Task
           3</button>
+        <!-- Новая вкладка Task 5 -->
+        <button class="nav-btn" onclick="switchTab('task5', this)" style="border-color: #9333ea; color: #9333ea;">Task 5
+          (CRUD)</button>
       </div>
 
       <!-- БЛОК АЙТУАРА -->
@@ -504,7 +503,7 @@
         <div class="sheet" style="background: var(--bg-color); padding: 40px; border-radius: 12px; box-shadow: none;">
           <div
             style="background: white; padding: 24px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); max-width: 750px; margin: 0 auto; text-align: center;">
-            <h2 style="font-size: 1.3rem; color: #111827; margin-bottom: 20px; border: none; text-align: left;">
+            <h2 style="font-size: 1.3rem; margin-bottom: 20px; border: none; text-align: left;">
               Управление элементами (Task 1)</h2>
 
             <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 30px; justify-content: center;">
@@ -526,29 +525,22 @@
         <div class="sheet" style="background: var(--bg-color); padding: 40px; border-radius: 12px; box-shadow: none;">
           <div
             style="background: white; padding: 24px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); max-width: 750px; margin: 0 auto; text-align: center;">
-            <h2 style="font-size: 1.3rem; color: #111827; margin-bottom: 20px; border: none; text-align: left;">
+            <h2 style="font-size: 1.3rem; margin-bottom: 20px; border: none; text-align: left;">
               Управление классами (Task 2)</h2>
 
             <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px 0;">
-
-              <!-- Элемент для взаимодействия (цель) -->
               <div id="task2Target" class="demo-box">
                 Тестовый элемент
               </div>
-
-              <!-- Кнопка вызова логики из JS -->
               <button class="lab-btn" onclick="toggleClassAndShow()"
                 style="background-color: #8b5cf6; color: white; border-color: #8b5cf6;">
                 Переключить класс 'active'
               </button>
-
-              <!-- Вывод классов на экран -->
               <p id="classListOutput"
                 style="color: #4b5563; font-family: monospace; background: #f3f4f6; padding: 10px 20px; border-radius: 6px; border: 1px solid #e5e7eb; margin: 0;">
                 Классы элемента: demo-box
               </p>
               <small style="color: #9ca3af;">(Также результат выведен в консоль разработчика F12)</small>
-
             </div>
           </div>
         </div>
@@ -574,6 +566,36 @@
             <p id="tableResult"></p>
             <div id="colorStats" class="color-stats"></div>
             <div id="tableContainer"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- БЛОК TASK 5 (CRUD СИСТЕМА) -->
+      <section id="task5" class="resume-section">
+        <div class="sheet" style="background: var(--bg-color); padding: 40px; border-radius: 12px; box-shadow: none;">
+          <div class="task-card" style="max-width: 800px; margin: 0 auto;">
+            <h2
+              style="font-size: 1.3rem; margin-bottom: 20px; text-align: left; border-bottom: 1px solid var(--rule); padding-bottom: 10px;">
+              Система управления постами (CRUD via DummyJSON)
+            </h2>
+
+            <!-- Форма CREATE -->
+            <form id="crudForm" onsubmit="createPost(event)"
+              style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; text-align: left; background: var(--bg-color); padding: 20px; border-radius: 8px; border: 1px solid #d1d5db;">
+              <h3 style="margin: 0; font-size: 1.1rem;">Создать новый пост</h3>
+              <input type="text" id="postTitle" placeholder="Заголовок поста" required
+                style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #d1d5db;">
+              <textarea id="postBody" placeholder="Текст поста" required
+                style="width: 100%; min-height: 80px; padding: 10px; border-radius: 6px; border: 1px solid #d1d5db;"></textarea>
+              <button type="submit" class="main-btn"
+                style="padding: 10px; font-size: 1rem; align-self: flex-start; background-color: #10b981;">Добавить пост
+                (Create)</button>
+            </form>
+
+            <!-- Список READ, UPDATE, DELETE -->
+            <div id="postsContainer" style="display: flex; flex-direction: column; gap: 16px;">
+              <!-- Карточки постов будут генерироваться здесь через JS -->
+            </div>
           </div>
         </div>
       </section>
