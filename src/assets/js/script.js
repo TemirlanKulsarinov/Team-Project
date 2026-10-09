@@ -139,6 +139,27 @@ async function apiRequest(url, options = {}) {
     return response.json();
 }
 
+// Всплывающее уведомление внизу экрана
+function showToast(message, type = 'success') {
+    let container = document.getElementById('toastContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toastContainer';
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('hide');
+        toast.addEventListener('animationend', () => toast.remove());
+    }, 3000);
+}
+
 function setStatus(message, type = '') {
     const el = document.getElementById('threadsStatus');
     el.className = 'threads-status' + (type ? ' ' + type : '');
@@ -212,9 +233,10 @@ async function handleCreatePost(event) {
         }, true, true);
         updateEmptyState();
         closeCreateModal();
+        showToast('Пост опубликован');
     } catch (e) {
         console.error(e);
-        alert('Не удалось создать пост. Проверьте интернет и попробуйте ещё раз.');
+        showToast('Не удалось создать пост', 'error');
     } finally {
         submitBtn.disabled = false;
         submitBtn.innerText = 'Опубликовать';
@@ -348,7 +370,7 @@ async function handleUpdatePost() {
             card.dataset.body = newBody;
         } else {
             console.error(e);
-            alert('Не удалось сохранить изменения. Попробуйте ещё раз.');
+            showToast('Не удалось сохранить изменения', 'error');
             saveBtn.disabled = false;
             saveBtn.innerText = 'Сохранить изменения';
             return;
@@ -360,6 +382,7 @@ async function handleUpdatePost() {
     saveBtn.disabled = false;
     saveBtn.innerText = 'Сохранить изменения';
     closeViewModal();
+    showToast('Пост обновлён');
 }
 
 // DELETE: DELETE /posts/{id}
@@ -377,7 +400,7 @@ async function handleDeletePost() {
     } catch (e) {
         if (!(isLocal && e.status === 404)) {
             console.error(e);
-            alert('Не удалось удалить пост. Попробуйте ещё раз.');
+            showToast('Не удалось удалить пост', 'error');
             deleteBtn.disabled = false;
             deleteBtn.innerText = 'Удалить ветку';
             return;
@@ -389,6 +412,7 @@ async function handleDeletePost() {
     deleteBtn.disabled = false;
     deleteBtn.innerText = 'Удалить ветку';
     updateEmptyState();
+    showToast('Пост удалён');
 }
 
 // Загружаем посты с сервера при открытии страницы
