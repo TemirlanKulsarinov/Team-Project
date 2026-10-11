@@ -129,8 +129,6 @@ const CATEGORIES = ['книги', 'музыка'];
 let currentActivePost = null;
 let localPostCounter = 0;
 
-// У постов dummyjson нет наших категорий, поэтому загруженным постам
-// категория назначается по id (чётный/нечётный), чтобы она не менялась между перезагрузками
 function getDefaultCategory(id) {
     return CATEGORIES[Number(id) % CATEGORIES.length];
 }
