@@ -14,6 +14,11 @@ function switchTab(tabId, buttonElement) {
     });
     document.getElementById(tabId).classList.add('active-tab');
     buttonElement.classList.add('active');
+
+    // Автоматическая загрузка постов при открытии Task 5
+    if (tabId === 'task5' && globalPosts.length === 0) {
+        initThreadsFeed();
+    }
 }
 
 // TASK 1: Управление элементами
@@ -52,7 +57,7 @@ function createParagraph() {
     p.style.padding = '12px 24px';
     p.style.border = '1px solid #e5e7eb';
     p.style.borderRadius = '8px';
-
+    
     let isChanged = false;
     p.addEventListener('click', function () {
         if (!isChanged) {
@@ -81,10 +86,10 @@ function handleGenerateTable() {
     const rows = parseInt(document.getElementById('rowsInput').value, 10);
     const cols = parseInt(document.getElementById('colsInput').value, 10);
     const container = document.getElementById('tableContainer');
-
+    
     if (!rows || !cols) return;
     container.innerHTML = '';
-
+    
     const table = document.createElement('table');
     for (let i = 0; i < rows; i++) {
         const tr = document.createElement('tr');
@@ -122,331 +127,348 @@ function toggleTheme() {
     applyTheme(current === 'dark' ? 'light' : 'dark');
 }
 
-// TASK 5: CRUD (Threads) через dummyjson.com
-const API_URL = 'https://dummyjson.com/posts';
-const POSTS_LIMIT = 10;
-const CATEGORIES = ['книги', 'музыка'];
-let currentActivePost = null;
-let localPostCounter = 0;
+// ==========================================
+// TASK 5: GLOBAL STATE & API (Threads)
+// ==========================================
+const API_URL = 'https://dummyjson.com';
+let globalPosts = [];
+let usersCache = {}; 
+let currentActivePostId = null;
+let currentProfileUserId = null;
 
-function getDefaultCategory(id) {
-    return CATEGORIES[Number(id) % CATEGORIES.length];
-}
-
-// Единая обёртка над fetch: бросает ошибку, если сервер ответил не 2xx
-async function apiRequest(url, options = {}) {
-    const response = await fetch(url, options);
-    if (!response.ok) {
-        const err = new Error(`HTTP ${response.status}`);
-        err.status = response.status;
-        throw err;
+// --- Динамический сбор тегов ---
+function updateTagDropdowns() {
+    const allTags = new Set();
+    globalPosts.forEach(post => {
+        if (post.tags) post.tags.forEach(t => allTags.add(t));
+    });
+    
+    const tagOptions = '<option value="all">Все теги</option>' + 
+                       Array.from(allTags).map(t => `<option value="${t}">#${t}</option>`).join('');
+    
+    const mainFilter = document.getElementById('mainFeedFilter');
+    const profileFilter = document.getElementById('profileFeedFilter');
+    
+    if (mainFilter) {
+        const currentVal = mainFilter.value;
+        mainFilter.innerHTML = tagOptions;
+        if(allTags.has(currentVal)) mainFilter.value = currentVal;
     }
-    return response.json();
-}
-
-// Всплывающее уведомление внизу экрана
-function showToast(message, type = 'success') {
-    let container = document.getElementById('toastContainer');
-    if (!container) {
-        container = document.createElement('div');
-        container.id = 'toastContainer';
-        container.className = 'toast-container';
-        document.body.appendChild(container);
-    }
-
-    const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    toast.textContent = message;
-    container.appendChild(toast);
-
-    setTimeout(() => {
-        toast.classList.add('hide');
-        toast.addEventListener('animationend', () => toast.remove());
-    }, 3000);
-}
-
-function setStatus(message, type = '') {
-    const el = document.getElementById('threadsStatus');
-    el.className = 'threads-status' + (type ? ' ' + type : '');
-    el.textContent = message;
-    el.style.display = message ? 'block' : 'none';
-}
-
-function updateEmptyState() {
-    const hasCards = document.querySelectorAll('#threadsContainer .thread-card').length > 0;
-    document.getElementById('emptyPostsPlaceholder').style.display = hasCards ? 'none' : 'block';
-}
-
-// READ: GET /posts?limit=10
-async function loadPosts() {
-    document.querySelectorAll('#threadsContainer .thread-card').forEach(card => card.remove());
-    document.getElementById('emptyPostsPlaceholder').style.display = 'none';
-    setStatus('Загрузка постов...');
-
-    try {
-        const data = await apiRequest(`${API_URL}?limit=${POSTS_LIMIT}`);
-        data.posts.forEach(post => renderThreadPost(post));
-        setStatus('');
-        updateEmptyState();
-    } catch (e) {
-        console.error(e);
-        setStatus('Не удалось загрузить посты. ', 'error');
-        const retryBtn = document.createElement('button');
-        retryBtn.type = 'button';
-        retryBtn.className = 'threads-retry-btn';
-        retryBtn.textContent = 'Повторить';
-        retryBtn.addEventListener('click', loadPosts);
-        document.getElementById('threadsStatus').appendChild(retryBtn);
+    
+    if (profileFilter) {
+        const currentVal = profileFilter.value;
+        profileFilter.innerHTML = tagOptions;
+        if(allTags.has(currentVal)) profileFilter.value = currentVal;
     }
 }
 
-function openCreateModal() { document.getElementById('createModal').classList.add('open'); }
-function closeCreateModal() {
-    document.getElementById('createModal').classList.remove('open');
-    document.getElementById('createPostForm').reset();
-}
-
-function closeViewModal() {
-    document.getElementById('viewModal').classList.remove('open');
-    currentActivePost = null;
-}
-
-// CREATE: POST /posts/add
-async function handleCreatePost(event) {
-    event.preventDefault();
-    const userId = Number(document.getElementById('postUserSelect').value);
-    const titleText = document.getElementById('postTitleInput').value.trim();
-    const bodyText = document.getElementById('postBodyInput').value.trim();
-    const category = document.getElementById('postCategorySelect').value;
-    if (!titleText || !bodyText) return;
-
-    const submitBtn = document.getElementById('submitCreateBtn');
-    submitBtn.disabled = true;
-    submitBtn.innerText = 'Загрузка...';
-
-    try {
-        const created = await apiRequest(`${API_URL}/add`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title: titleText, body: bodyText, userId: userId, tags: [category] })
-        });
-        // dummyjson не сохраняет данные, поэтому такой пост существует только до перезагрузки
-        renderThreadPost({
-            id: created.id,
-            title: created.title ?? titleText,
-            body: created.body ?? bodyText,
-            userId: created.userId ?? userId,
-            category: category
-        }, true, true);
-        updateEmptyState();
-        closeCreateModal();
-        showToast('Пост опубликован');
-    } catch (e) {
-        console.error(e);
-        showToast('Не удалось создать пост', 'error');
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerText = 'Опубликовать';
-    }
-}
-
-function renderThreadPost(post, prepend = false, isLocal = false) {
+// --- API Фетчинг ---
+async function initThreadsFeed() {
     const container = document.getElementById('threadsContainer');
-    localPostCounter++;
+    container.innerHTML = '<p style="text-align: center; color: var(--muted);">Загрузка ленты...</p>';
+    try {
+        const res = await fetch(`${API_URL}/posts?limit=10`); // Увеличил лимит для тестов
+        const data = await res.json();
+        globalPosts = data.posts.map(p => ({
+            ...p,
+            likes: p.reactions?.likes || 0,
+            reposts: p.reactions?.reposts || 0
+        }));
+        
+        updateTagDropdowns();
+        await renderMainFeed();
+    } catch (e) {
+        container.innerHTML = '<p style="color: red;">Ошибка сети</p>';
+    }
+}
 
-    // reactions в dummyjson — объект { likes, dislikes } (в старых версиях — число)
-    const initialLikes = (post.reactions && typeof post.reactions === 'object')
-        ? post.reactions.likes
-        : (post.reactions || 0);
+async function getUserInfo(userId) {
+    if (usersCache[userId]) return usersCache[userId];
+    try {
+        const res = await fetch(`${API_URL}/users/${userId}`);
+        const user = await res.json();
+        usersCache[userId] = user;
+        return user;
+    } catch (e) {
+        return { 
+            id: userId, username: `user_${userId}`, 
+            image: 'https://api.dicebear.com/7.x/bottts/svg?seed='+userId, 
+            firstName: 'Unknown', lastName: '', birthDate: 'N/A', 
+            company: {title: 'No Bio'}, address: {city: 'Unknown'} 
+        };
+    }
+}
 
+// --- Комбинированная Фильтрация и Сортировка ---
+function sortAndFilterPosts(postsArray, filterTag, sortType) {
+    let result = [...postsArray];
+    
+    // 1. Сначала фильтруем по тегу
+    if (filterTag && filterTag !== 'all') {
+        result = result.filter(p => p.tags && p.tags.includes(filterTag));
+    } 
+    
+    // 2. Затем сортируем отфильтрованное
+    if (sortType === 'title-asc') {
+        result.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (sortType === 'title-desc') {
+        result.sort((a, b) => b.title.localeCompare(a.title));
+    } else if (sortType === 'newest') {
+        result.sort((a, b) => b.id - a.id); // Наши новые посты имеют Date.now() ID, поэтому они будут выше
+    }
+    
+    return result;
+}
+
+// --- Рендер ленты ---
+async function renderMainFeed() {
+    const container = document.getElementById('threadsContainer');
+    const filterVal = document.getElementById('mainFeedFilter').value;
+    const sortVal = document.getElementById('mainFeedSort').value;
+    
+    const postsToRender = sortAndFilterPosts(globalPosts, filterVal, sortVal);
+    
+    container.innerHTML = '';
+    if (postsToRender.length === 0) {
+        container.innerHTML = '<div class="threads-empty">Постов по заданным критериям не найдено.</div>';
+        return;
+    }
+
+    for (const post of postsToRender) {
+        const user = await getUserInfo(post.userId);
+        container.appendChild(createPostHTML(post, user));
+    }
+}
+
+function createPostHTML(post, user) {
     const postCard = document.createElement('div');
     postCard.className = 'thread-card';
-    // DOM-id уникален всегда, а настоящий id с сервера лежит в data-id
-    // (POST /add каждый раз возвращает один и тот же id, поэтому его нельзя использовать как DOM-id)
-    postCard.id = `post-local-${localPostCounter}`;
-    postCard.dataset.id = post.id;
-    postCard.dataset.local = isLocal ? 'true' : 'false';
-    postCard.dataset.userId = post.userId;
-    postCard.dataset.title = post.title || '';
-    postCard.dataset.body = post.body;
-    postCard.dataset.category = post.category || getDefaultCategory(post.id);
-    postCard.dataset.likes = initialLikes;
-    postCard.dataset.reposts = 0;
-
-    const avatarUrl = post.userId == 2
-        ? 'https://api.dicebear.com/7.x/bottts/svg?seed=User2'
-        : 'https://api.dicebear.com/7.x/bottts/svg?seed=User1';
+    postCard.id = `post-${post.id}`;
+    
+    const tagsHtml = post.tags ? post.tags.map(t => `<span class="thread-tag">#${t}</span>`).join(' ') : '';
 
     postCard.innerHTML = `
-        <img src="${avatarUrl}" class="thread-avatar" alt="">
+        <img src="${user.image}" class="thread-avatar" onclick="openUserProfile(${user.id}, event)" title="Открыть профиль">
         <div class="thread-content">
             <div class="thread-header-info">
-                <span class="thread-author"></span>
+                <span class="thread-author" onclick="openUserProfile(${user.id}, event)">@${user.username}</span>
             </div>
-            <h3 class="thread-title"></h3>
-            <p class="thread-text"></p>
-            <span class="thread-category"></span>
+            <h4 style="margin: 0 0 6px; font-size: 1rem; color: var(--ink);">${post.title}</h4>
+            <p class="thread-text">${post.body}</p>
+            <div style="margin-bottom: 10px;">${tagsHtml}</div>
             <div class="thread-actions">
-                <button type="button" class="action-btn like-btn">
+                <button class="action-btn like-btn" onclick="toggleLike(event, ${post.id})">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                    <span class="like-count"></span>
+                    <span class="like-count">${post.likes}</span>
                 </button>
-                <button type="button" class="action-btn repost-btn">
+                <button class="action-btn repost-btn" onclick="toggleRepost(event, ${post.id})">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"></path><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><path d="M7 23l-4-4 4-4"></path><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
-                    <span class="repost-count">0</span>
+                    <span class="repost-count">${post.reposts}</span>
                 </button>
             </div>
         </div>
     `;
 
-    // textContent вместо innerHTML — защита от XSS
-    postCard.querySelector('.thread-author').textContent = `UserId ${post.userId}`;
-    postCard.querySelector('.thread-title').textContent = post.title || '';
-    postCard.querySelector('.thread-text').textContent = post.body;
-    postCard.querySelector('.thread-category').textContent = `#${postCard.dataset.category}`;
-    postCard.querySelector('.like-count').textContent = initialLikes;
-
-    postCard.querySelector('.like-btn').addEventListener('click', (e) => toggleLike(e, postCard));
-    postCard.querySelector('.repost-btn').addEventListener('click', (e) => toggleRepost(e, postCard));
     postCard.addEventListener('click', (e) => {
-        if (!e.target.closest('.action-btn')) openViewModal(postCard);
+        if (!e.target.closest('.action-btn') && !e.target.closest('.thread-avatar') && !e.target.closest('.thread-author')) {
+            openViewModal(post.id);
+        }
     });
 
-    if (prepend) {
-        container.insertBefore(postCard, container.querySelector('.thread-card'));
-    } else {
-        container.appendChild(postCard);
-    }
+    return postCard;
 }
 
-function toggleLike(e, card) {
+// --- Интерактив ---
+function toggleLike(e, id) {
     e.stopPropagation();
-    const btn = card.querySelector('.like-btn');
-    let likes = parseInt(card.dataset.likes, 10);
-    if (btn.classList.toggle('liked')) {
-        likes++;
-    } else {
-        likes--;
-    }
-    card.dataset.likes = likes;
-    card.querySelector('.like-count').innerText = likes;
+    const post = globalPosts.find(p => p.id === id);
+    const btn = e.currentTarget;
+    if (btn.classList.toggle('liked')) post.likes++; else post.likes--;
+    btn.querySelector('.like-count').innerText = post.likes;
 }
 
-function toggleRepost(e, card) {
+function toggleRepost(e, id) {
     e.stopPropagation();
-    const btn = card.querySelector('.repost-btn');
-    let reposts = parseInt(card.dataset.reposts, 10);
-    if (btn.classList.toggle('reposted')) {
-        reposts++;
-    } else {
-        reposts--;
-    }
-    card.dataset.reposts = reposts;
-    card.querySelector('.repost-count').innerText = reposts;
+    const post = globalPosts.find(p => p.id === id);
+    const btn = e.currentTarget;
+    if (btn.classList.toggle('reposted')) post.reposts++; else post.reposts--;
+    btn.querySelector('.repost-count').innerText = post.reposts;
 }
 
-// Подробный просмотр поста (только чтение)
-function openViewModal(card) {
-    currentActivePost = card;
-    document.getElementById('viewAuthorText').innerText = `UserId ${card.dataset.userId}`;
-    document.getElementById('viewTitleText').textContent = card.dataset.title;
-    document.getElementById('viewBodyText').textContent = card.dataset.body;
-    document.getElementById('viewCategoryText').textContent = `#${card.dataset.category}`;
+// --- Модалки: Профиль Пользователя ---
+async function openUserProfile(userId, event) {
+    if(event) event.stopPropagation();
+    
+    currentProfileUserId = userId;
+    document.getElementById('profileModal').classList.add('open');
+    const profileLeft = document.getElementById('profileLeftContent');
+    const profileFeed = document.getElementById('profileFeedContainer');
+    
+    profileLeft.innerHTML = '<p>Загрузка данных...</p>';
+    profileFeed.innerHTML = '';
+
+    const user = await getUserInfo(userId);
+    
+    // Правдоподобные данные из API DummyJSON
+    const bio = user.company?.title ? `${user.company.title} at ${user.company.name}` : 'Студент / Разработчик';
+    const location = user.address?.city ? user.address.city : 'Не указан';
+    const education = user.university ? user.university : 'Самоучка';
+    
+    profileLeft.innerHTML = `
+        <img src="${user.image}" class="profile-big-avatar" alt="avatar">
+        <h3 style="margin: 10px 0 4px;">${user.firstName} ${user.lastName}</h3>
+        <p style="color: var(--accent); font-weight: bold; margin: 0 0 5px;">@${user.username}</p>
+        <p style="color: var(--muted); font-size: 0.85rem; margin: 0 0 15px;">📍 г. ${location}</p>
+        
+        <div style="font-size: 0.9rem; color: var(--ink); text-align: left; background: var(--card); padding: 12px; border-radius: 8px; border: 1px solid var(--rule);">
+            <div style="margin-bottom: 8px;">🎓 <strong>Образование:</strong><br><span style="color:var(--muted)">${education}</span></div>
+            <div style="margin-bottom: 8px;">💼 <strong>Работа:</strong><br><span style="color:var(--muted)">${bio}</span></div>
+            <div>🎂 <strong>День рождения:</strong><br><span style="color:var(--muted)">${user.birthDate || 'Скрыто'}</span></div>
+        </div>
+    `;
+
+    renderProfilePosts(userId);
+}
+
+function closeProfileModal() {
+    document.getElementById('profileModal').classList.remove('open');
+    currentProfileUserId = null;
+}
+
+async function renderProfilePosts(userId) {
+    const container = document.getElementById('profileFeedContainer');
+    const filterVal = document.getElementById('profileFeedFilter').value;
+    const sortVal = document.getElementById('profileFeedSort').value;
+    
+    const userPosts = globalPosts.filter(p => p.userId === userId);
+    const postsToRender = sortAndFilterPosts(userPosts, filterVal, sortVal);
+
+    container.innerHTML = '';
+    if (postsToRender.length === 0) {
+        container.innerHTML = '<p style="color: var(--muted); text-align:center; padding: 20px;">Постов не найдено.</p>';
+        return;
+    }
+
+    const user = await getUserInfo(userId);
+    postsToRender.forEach(post => {
+        container.appendChild(createPostHTML(post, user));
+    });
+}
+
+// Слушатели для фильтров в профиле
+function handleProfileFilterChange() {
+    if (currentProfileUserId) renderProfilePosts(currentProfileUserId);
+}
+document.getElementById('profileFeedFilter').addEventListener('change', handleProfileFilterChange);
+document.getElementById('profileFeedSort').addEventListener('change', handleProfileFilterChange);
+
+// --- Модалки: CRUD (Create, Update, Delete) ---
+function openCreateModal(prefillUserId = null) { 
+    document.getElementById('createModal').classList.add('open'); 
+    
+    // Если открываем из профиля, автоматически выбираем этого юзера
+    if (prefillUserId) {
+        const select = document.getElementById('postUserSelect');
+        // Проверяем, есть ли такой юзер в селекте. Если нет - добавляем временно (для DummyJSON)
+        if (!Array.from(select.options).some(opt => opt.value == prefillUserId)) {
+            const newOption = new Option(`User ${prefillUserId}`, prefillUserId);
+            select.add(newOption);
+        }
+        select.value = prefillUserId;
+    }
+}
+
+function closeCreateModal() { 
+    document.getElementById('createModal').classList.remove('open'); 
+    document.getElementById('createPostForm').reset(); 
+}
+
+async function handleCreatePost(event) {
+    event.preventDefault();
+    const userId = parseInt(document.getElementById('postUserSelect').value, 10);
+    const titleText = document.getElementById('postTitleInput').value.trim();
+    const bodyText = document.getElementById('postBodyInput').value.trim();
+    const submitBtn = document.getElementById('submitCreateBtn');
+
+    submitBtn.innerText = 'Публикация...';
+    try {
+        const res = await fetch(`${API_URL}/posts/add`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: titleText, body: bodyText, userId: userId })
+        });
+        const newPost = await res.json();
+        newPost.id = Date.now(); // Для сортировки newest этот id будет самым большим
+        newPost.tags = ['new', 'update'];
+        newPost.likes = 0;
+        newPost.reposts = 0;
+        
+        globalPosts.unshift(newPost);
+        updateTagDropdowns(); 
+        
+        renderMainFeed();
+        if (currentProfileUserId === userId) renderProfilePosts(userId);
+        
+        closeCreateModal();
+    } catch (e) {
+        console.error(e);
+    } finally {
+        submitBtn.innerText = 'Опубликовать';
+    }
+}
+
+async function openViewModal(postId) {
+    currentActivePostId = postId;
+    const post = globalPosts.find(p => p.id === postId);
+    const user = await getUserInfo(post.userId);
+
+    document.getElementById('viewAuthorText').innerText = `@${user.username}`;
+    document.getElementById('viewTitleInput').value = post.title;
+    document.getElementById('viewBodyInput').value = post.body;
     document.getElementById('viewModal').classList.add('open');
 }
 
-// Окно редактирования (открывается кнопкой «Редактировать» из подробного вида)
-function openEditModal() {
-    if (!currentActivePost) return;
-    const card = currentActivePost;
-    document.getElementById('editAuthorText').innerText = `UserId ${card.dataset.userId}`;
-    document.getElementById('editTitleInput').value = card.dataset.title;
-    document.getElementById('editBodyInput').value = card.dataset.body;
-    document.getElementById('editCategorySelect').value = card.dataset.category;
+function closeViewModal() {
     document.getElementById('viewModal').classList.remove('open');
-    document.getElementById('editModal').classList.add('open');
+    currentActivePostId = null;
 }
 
-function closeEditModal() {
-    document.getElementById('editModal').classList.remove('open');
-    currentActivePost = null;
-}
-
-// UPDATE: PUT /posts/{id}
 async function handleUpdatePost() {
-    const newTitle = document.getElementById('editTitleInput').value.trim();
-    const newBody = document.getElementById('editBodyInput').value.trim();
-    const newCategory = document.getElementById('editCategorySelect').value;
-    if (!newTitle || !newBody || !currentActivePost) return;
+    const newTitle = document.getElementById('viewTitleInput').value.trim();
+    const newBody = document.getElementById('viewBodyInput').value.trim();
+    if (!newTitle || !newBody || !currentActivePostId) return;
 
-    const card = currentActivePost;
-    const isLocal = card.dataset.local === 'true';
-    const saveBtn = document.getElementById('saveEditBtn');
-    saveBtn.disabled = true;
-    saveBtn.innerText = 'Сохранение...';
-
+    const btn = document.getElementById('saveEditBtn');
+    btn.innerText = 'Сохранение...';
     try {
-        const updated = await apiRequest(`${API_URL}/${card.dataset.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title: newTitle, body: newBody, tags: [newCategory] })
-        });
-        card.dataset.title = updated.title ?? newTitle;
-        card.dataset.body = updated.body ?? newBody;
-        card.dataset.category = newCategory;
-    } catch (e) {
-        // Пост, созданный через /add, на сервере не хранится, поэтому PUT вернёт 404 — это ожидаемо
-        if (isLocal && e.status === 404) {
-            card.dataset.title = newTitle;
-            card.dataset.body = newBody;
-            card.dataset.category = newCategory;
-        } else {
-            console.error(e);
-            showToast('Не удалось сохранить изменения', 'error');
-            saveBtn.disabled = false;
-            saveBtn.innerText = 'Сохранить изменения';
-            return;
-        }
-    }
-
-    card.querySelector('.thread-title').textContent = card.dataset.title;
-    card.querySelector('.thread-text').textContent = card.dataset.body;
-    card.querySelector('.thread-category').textContent = `#${card.dataset.category}`;
-    saveBtn.disabled = false;
-    saveBtn.innerText = 'Сохранить изменения';
-    closeEditModal();
-    showToast('Пост обновлён');
+        await fetch(`${API_URL}/posts/${currentActivePostId}`, { method: 'PUT' });
+    } catch(e) {}
+    
+    const postIndex = globalPosts.findIndex(p => p.id === currentActivePostId);
+    globalPosts[postIndex].title = newTitle;
+    globalPosts[postIndex].body = newBody;
+    
+    renderMainFeed();
+    if (currentProfileUserId) renderProfilePosts(currentProfileUserId); 
+    
+    closeViewModal();
+    btn.innerText = 'Сохранить';
 }
 
-// DELETE: DELETE /posts/{id}
 async function handleDeletePost() {
-    if (!currentActivePost) return;
-
-    const card = currentActivePost;
-    const isLocal = card.dataset.local === 'true';
-    const deleteBtn = document.getElementById('deletePostBtn');
-    deleteBtn.disabled = true;
-    deleteBtn.innerText = 'Удаление...';
-
+    if (!currentActivePostId) return;
+    const btn = document.getElementById('deletePostBtn');
+    btn.innerText = 'Удаление...';
+    
     try {
-        await apiRequest(`${API_URL}/${card.dataset.id}`, { method: 'DELETE' });
-    } catch (e) {
-        if (!(isLocal && e.status === 404)) {
-            console.error(e);
-            showToast('Не удалось удалить пост', 'error');
-            deleteBtn.disabled = false;
-            deleteBtn.innerText = 'Удалить ветку';
-            return;
-        }
-    }
-
-    card.remove();
-    closeEditModal();
-    deleteBtn.disabled = false;
-    deleteBtn.innerText = 'Удалить ветку';
-    updateEmptyState();
-    showToast('Пост удалён');
+        await fetch(`${API_URL}/posts/${currentActivePostId}`, { method: 'DELETE' });
+    } catch(e) {}
+    
+    globalPosts = globalPosts.filter(p => p.id !== currentActivePostId);
+    
+    renderMainFeed();
+    if (currentProfileUserId) renderProfilePosts(currentProfileUserId);
+    
+    closeViewModal();
+    btn.innerText = 'Удалить ветку';
 }
-
-// Загружаем посты с сервера при открытии страницы
-document.addEventListener('DOMContentLoaded', loadPosts);
