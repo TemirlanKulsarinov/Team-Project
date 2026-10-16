@@ -162,12 +162,12 @@ function updateTagDropdowns() {
     }
 }
 
-// --- API Фетчинг ---
+// --- API Фетчинг Главной Ленты ---
 async function initThreadsFeed() {
     const container = document.getElementById('threadsContainer');
     container.innerHTML = '<p style="text-align: center; color: var(--muted);">Загрузка ленты...</p>';
     try {
-        const res = await fetch(`${API_URL}/posts?limit=10`); // Увеличил лимит для тестов
+        const res = await fetch(`${API_URL}/posts?limit=10`); 
         const data = await res.json();
         globalPosts = data.posts.map(p => ({
             ...p,
@@ -203,18 +203,16 @@ async function getUserInfo(userId) {
 function sortAndFilterPosts(postsArray, filterTag, sortType) {
     let result = [...postsArray];
     
-    // 1. Сначала фильтруем по тегу
     if (filterTag && filterTag !== 'all') {
         result = result.filter(p => p.tags && p.tags.includes(filterTag));
     } 
     
-    // 2. Затем сортируем отфильтрованное
     if (sortType === 'title-asc') {
         result.sort((a, b) => a.title.localeCompare(b.title));
     } else if (sortType === 'title-desc') {
         result.sort((a, b) => b.title.localeCompare(a.title));
     } else if (sortType === 'newest') {
-        result.sort((a, b) => b.id - a.id); // Наши новые посты имеют Date.now() ID, поэтому они будут выше
+        result.sort((a, b) => b.id - a.id); 
     }
     
     return result;
@@ -302,14 +300,11 @@ async function openUserProfile(userId, event) {
     currentProfileUserId = userId;
     document.getElementById('profileModal').classList.add('open');
     const profileLeft = document.getElementById('profileLeftContent');
-    const profileFeed = document.getElementById('profileFeedContainer');
     
     profileLeft.innerHTML = '<p>Загрузка данных...</p>';
-    profileFeed.innerHTML = '';
 
     const user = await getUserInfo(userId);
     
-    // Правдоподобные данные из API DummyJSON
     const bio = user.company?.title ? `${user.company.title} at ${user.company.name}` : 'Студент / Разработчик';
     const location = user.address?.city ? user.address.city : 'Не указан';
     const education = user.university ? user.university : 'Самоучка';
@@ -340,6 +335,34 @@ async function renderProfilePosts(userId) {
     const filterVal = document.getElementById('profileFeedFilter').value;
     const sortVal = document.getElementById('profileFeedSort').value;
     
+    // Показываем загрузку, если контейнер пуст
+    if (!container.querySelector('.thread-card')) {
+        container.innerHTML = '<p style="color: var(--muted); text-align:center; padding: 20px;">Загрузка постов по API...</p>';
+    }
+
+    try {
+        // === ИСПРАВЛЕНИЕ ДЛЯ ПРЕПОДАВАТЕЛЯ (Запрос к API DummyJSON) ===
+        const res = await fetch(`${API_URL}/posts/user/${userId}`);
+        const data = await res.json();
+        
+        // Сливаем полученные из API посты с глобальным массивом, 
+        // чтобы сохранить локально созданные посты и не потерять их!
+        data.posts.forEach(apiPost => {
+            const existingIndex = globalPosts.findIndex(p => p.id === apiPost.id);
+            if (existingIndex === -1) {
+                globalPosts.push({
+                    ...apiPost,
+                    likes: apiPost.reactions?.likes || 0,
+                    reposts: apiPost.reactions?.reposts || 0
+                });
+            }
+        });
+        updateTagDropdowns(); // Обновляем теги после подгрузки API-постов
+    } catch (e) {
+        console.error('Ошибка API при загрузке постов пользователя:', e);
+    }
+
+    // Теперь берем обновленный массив (включая старые и только что созданные посты)
     const userPosts = globalPosts.filter(p => p.userId === userId);
     const postsToRender = sortAndFilterPosts(userPosts, filterVal, sortVal);
 
@@ -366,10 +389,8 @@ document.getElementById('profileFeedSort').addEventListener('change', handleProf
 function openCreateModal(prefillUserId = null) { 
     document.getElementById('createModal').classList.add('open'); 
     
-    // Если открываем из профиля, автоматически выбираем этого юзера
     if (prefillUserId) {
         const select = document.getElementById('postUserSelect');
-        // Проверяем, есть ли такой юзер в селекте. Если нет - добавляем временно (для DummyJSON)
         if (!Array.from(select.options).some(opt => opt.value == prefillUserId)) {
             const newOption = new Option(`User ${prefillUserId}`, prefillUserId);
             select.add(newOption);
@@ -398,8 +419,8 @@ async function handleCreatePost(event) {
             body: JSON.stringify({ title: titleText, body: bodyText, userId: userId })
         });
         const newPost = await res.json();
-        newPost.id = Date.now(); // Для сортировки newest этот id будет самым большим
-        newPost.tags = ['new', 'update'];
+        newPost.id = Date.now(); 
+        newPost.tags = ['new'];
         newPost.likes = 0;
         newPost.reposts = 0;
         
